@@ -53,7 +53,7 @@ public class Menu extends Application {
     private static TextField txfHeightMin = new TextField();
     private static TextField txfHeightMax = new TextField();
     private static Button btnFilter = new Button("Filter");
-    private static Button btnResetFilters = new Button("Reset filters");
+    private static Button btnResetFilters = new Button("Reset");
 
 
 
@@ -229,7 +229,6 @@ public class Menu extends Application {
 
         return filteredData;
     }
-
     public static List<Player> filterByHeight(List<Player> players) {
         if (txfHeightMin.getText().isEmpty()) txfHeightMin.setText("100");
         else if (txfHeightMax.getText().isEmpty()) txfHeightMax.setText("250");
