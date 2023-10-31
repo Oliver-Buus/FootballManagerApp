@@ -16,9 +16,8 @@ public class Controller {
 
     public static Player createPlayer(String name, int age, String positionString,
                                       String nationality, int height, int weight, String personality,
-                                      String injurySusceptibility, String recurringInjury) {
-        Player player = new Player(name, age, positionString, nationality, height, weight, personality,
-                injurySusceptibility, recurringInjury);
+                                      String recurringInjury) {
+        Player player = new Player(name, age, positionString, nationality, height, weight, personality, recurringInjury);
         addPositionsToPlayer(player);
         Storage.storePlayer(player);
         return player;
@@ -86,11 +85,12 @@ public class Controller {
             Document document = Jsoup.parse(file);
 
 
-            int count = 0;
-            for (Element heading : document.select("table th")) {
-                count++;
-                System.out.println(count + " " + heading.text());
-            }
+
+//            int count = 0;
+//            for (Element heading : document.select("table th")) {
+//                count++;
+//                System.out.println(count + " " + heading.text());
+//            }
 
 
 
@@ -114,12 +114,10 @@ public class Controller {
 
                 String personality = row.select("td:nth-child(7)").text();
 
-                String injurySusceptibility = row.select("td:nth-child(8)").text();
-
-                String recurringInjury = row.select("td:nth-child(9)").text();
+                String recurringInjury = row.select("td:nth-child(8)").text();
 
                 createPlayer(name, age, positionString, nationality, height, weight,
-                        personality, injurySusceptibility, recurringInjury);
+                        personality, recurringInjury);
             }
         } catch (Exception e) {
             System.out.println(e);
