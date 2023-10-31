@@ -1,0 +1,52 @@
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+.button {
+        -fx-font-size: 14px;
+        -fx-font-family: 'Roboto Condensed', sans-serif;
+        -fx-font-weight: 700;
+        -fx-background-color: "#78bfa4";
+}
+.button:hover {
+        -fx-background-color: "#6aa891";
+        -fx-text-fill: white;
+        -fx-cursor: hand;
+}
+
+.root {
+        -fx-background-color: "#6aa891";
+        -fx-focus-color: transparent;
+}
+
+.table-view {
+        -fx-text-fill: "#6aa891";
+}
+
+.column-header .label {
+        -fx-text-fill: black;
+}
+
+.column-header {
+        -fx-background-color: "#609984";
+        -fx-font-size: 14px;
+        -fx-font-family: 'Roboto Condensed', sans-serif;
+        -fx-font-weight: 700;
+        -fx-padding: 3px;
+}
+
+
+.table-cell {
+        -fx-background-color: "#78bfa4";
+        -fx-border-color: "#518f78";
+        -fx-border-width: 1px;
+        -fx-cursor: hand;
+        -fx-font-size: 14px;
+        -fx-font-family: 'Roboto Condensed', sans-serif;
+        -fx-font-weight: 700;
+        -fx-padding: 2px;
+}
+
+
+.table-view .scroll-bar:vertical {
+        -fx-opacity: 0;
+        -fx-pref-width: 0;
+}
