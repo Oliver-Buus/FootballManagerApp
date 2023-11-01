@@ -18,8 +18,7 @@ import model.Player;
 import model.Position;
 import storage.Storage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -61,8 +60,8 @@ public class Menu extends Application {
 
     private Scene sceneMain() throws Exception {
         GridPane pane = new GridPane();
-        pane.setPrefHeight(720);
-        pane.setPrefWidth(1280);
+        pane.setPrefHeight(900);
+        pane.setPrefWidth(1600);
         pane.setGridLinesVisible(false);
         pane.setPadding(new Insets(20));
         pane.setHgap(10);
@@ -122,48 +121,60 @@ public class Menu extends Application {
         //______________________________________________________________________________________________________________
 
         tvwPlayers.getItems().setAll(Controller.getAllPlayers());
-        tvwPlayers.setPrefWidth(1240);
+        tvwPlayers.setPrefWidth(1560);
 
         return scene;
     }
 
     public static void createTableViewColumns() {
-        List<TableColumn> tcList = new ArrayList<>();
-
-        tcList.add(new TableColumn<Player, String>("Name"));
-        tcList.get(0).setCellValueFactory(new PropertyValueFactory<Player, String>("name"));
-
-        tcList.add(new TableColumn<Player, Integer>("Age"));
-        tcList.get(1).setCellValueFactory(new PropertyValueFactory<Player, Integer>("age"));
-
-        tcList.add(new TableColumn<Player, String>("Position"));
-        tcList.get(2).setCellValueFactory(new PropertyValueFactory<Player, String>("positionString"));
-
-        tcList.add(new TableColumn<Player, String>("NAT"));
-        tcList.get(3).setCellValueFactory(new PropertyValueFactory<Player, String>("nationality"));
-
-        tcList.add(new TableColumn<Player, Integer>("Height"));
-        tcList.get(4).setCellValueFactory(new PropertyValueFactory<Player, Integer>("height"));
-
-        tcList.add(new TableColumn<Player, Integer>("Weight"));
-        tcList.get(5).setCellValueFactory(new PropertyValueFactory<Player, Integer>("weight"));
-
-        tcList.add(new TableColumn<Player, String>("Personality"));
-        tcList.get(6).setCellValueFactory(new PropertyValueFactory<Player, String>("personality"));
-
-        tcList.add(new TableColumn<Player, String>("Rc Injury"));
-        tcList.get(7).setCellValueFactory(new PropertyValueFactory<Player, String>("recurringInjury"));
-//        TableColumn recurringInjuryColumn = new TableColumn<Player, String>("Rc Injury");
-//        recurringInjuryColumn.setCellValueFactory(new PropertyValueFactory<Player, String>("recurringInjury"));
 
 
-        for (TableColumn tc : tcList) {
-            tvwPlayers.getColumns().add(tc);
-            tc.setEditable(false);
-        }
+        addColumn(tvwPlayers, "Division", "division", "");
+        addColumn(tvwPlayers, "Club", "club", "");
+        addColumn(tvwPlayers, "Name", "name", "");
+        addColumn(tvwPlayers, "Age", "age", "");
+        addColumn(tvwPlayers, "Position", "positionString", "");
+        addColumn(tvwPlayers, "Nat", "nationality", "");
+        addColumn(tvwPlayers, "2nd\nNat", "secondNationality", "");
+        addColumn(tvwPlayers, "Height", "height", "");
+        addColumn(tvwPlayers, "Personality", "personality", "");
+        addColumn(tvwPlayers, "Rc Injury", "recurringInjury", "");
+        addColumn(tvwPlayers, "EU National", "euNational", "");
+        addColumn(tvwPlayers, "Home-Grown Status", "homeGrownStatus", "");
+        addColumn(tvwPlayers, "Preferred Foot", "preferredFoot", "");
+        GuiUtils.createWageComparator(addColumn(tvwPlayers, "Wage", "wage", ""));
+        addColumn(tvwPlayers, "Expires", "contractExpiryDate", "");
+        addColumn(tvwPlayers, "Transfer Status", "transferStatus", "");
+        addColumn(tvwPlayers, "Transfer Value", "transferValue", "");
+        addColumn(tvwPlayers, "WP Needed", "wpNeeded", "Work Permit Needed");
+        addColumn(tvwPlayers, "WP Chance", "wpChance", "");
 
         tvwPlayers.setPrefHeight(480);
 
+
+    }
+
+    public static <S, T> TableColumn addColumn(TableView<S> tableView, String columName, String propertyName,
+                                               String tooltipText) {
+        Label label = new Label(columName);
+        label.setWrapText(true);
+
+        TableColumn<S, T> column = new TableColumn<>();
+        column.setGraphic(label);
+        column.setCellValueFactory(new PropertyValueFactory<>(propertyName));
+
+        tableView.getColumns().add(column);
+
+        return column;
+    }
+
+    public static <S> void createWageComparator(TableColumn<S, String> wageColumn) {
+        Comparator<String> wageComparator = (wage1, wage2) -> {
+            int wage1Value = Integer.parseInt(wage1.replaceAll("[^0-9]", ""));
+            int wage2Value = Integer.parseInt(wage2.replaceAll("[^0-9]", ""));
+            return Integer.compare(wage1Value, wage2Value);
+        };
+        wageColumn.setComparator(wageComparator);
     }
 
     public static void addToCbbPlayerPosition() {
@@ -187,6 +198,7 @@ public class Menu extends Application {
 
 
         // TODO Filters for nationality and more
+        //
 
 
         tvwPlayers.getItems().setAll(currentPlayersList);

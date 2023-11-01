@@ -1,5 +1,6 @@
 package controller;
 
+import model.PP2Universal;
 import model.Player;
 import model.Position;
 import org.jsoup.Jsoup;
@@ -14,11 +15,15 @@ import java.util.Scanner;
 
 public class Controller {
 
-    public static Player createPlayer(String name, int age, String positionString,
-                                      String nationality, int height, int weight, String personality,
-                                      String recurringInjury) {
-        Player player = new Player(name, age, positionString, nationality, height, weight, personality, recurringInjury);
-        addPositionsToPlayer(player);
+    public static Player createPlayer(String division, String club, String name, int age, String positionString,
+                                      String nationality, String secondNationality, int height, String personality,
+                                      String recurringInjury, String euNational, String homeGrownStatus,
+                                      String preferredFoot, String wage, String contractExpiryDate,
+                                      String transferStatus, String transferValue, String wpNeeded, String wpChance) {
+        Player player = new Player(division, club, name, age, positionString, nationality, secondNationality,
+                height, personality, recurringInjury, euNational, homeGrownStatus, preferredFoot, wage,
+                contractExpiryDate, transferStatus, transferValue, wpNeeded, wpChance);
+        player.addPositionsToPlayer();
         Storage.storePlayer(player);
         return player;
     }
@@ -27,97 +32,65 @@ public class Controller {
         return Storage.getPlayers();
     }
 
-    public static void addPositionsToPlayer(Player player) {
-        File[] files = new File[13];
-        files[0] = new File("FM MoneyBall/src/resources/DR.txt");
-        files[1] = new File("FM MoneyBall/src/resources/DL.txt");
-        files[2] = new File("FM MoneyBall/src/resources/DC.txt");
-        files[3] = new File("FM MoneyBall/src/resources/WBR.txt");
-        files[4] = new File("FM MoneyBall/src/resources/WBL.txt");
-        files[5] = new File("FM MoneyBall/src/resources/DM.txt");
-        files[6] = new File("FM MoneyBall/src/resources/MR.txt");
-        files[7] = new File("FM MoneyBall/src/resources/ML.txt");
-        files[8] = new File("FM MoneyBall/src/resources/MC.txt");
-        files[9] = new File("FM MoneyBall/src/resources/AMR.txt");
-        files[10] = new File("FM MoneyBall/src/resources/AML.txt");
-        files[11] = new File("FM MoneyBall/src/resources/AMC.txt");
-        files[12] = new File("FM MoneyBall/src/resources/STC.txt");
+    public static PP2Universal createPP2Universal(Player player, String apps, int mins, double minsPerGame,
+                                                  int playerOfTheMatch, int goalLeadingMistakes, double avgRating) {
 
-        Position[] positions = new Position[13];
-        positions[0] = Position.DR;
-        positions[1] = Position.DL;
-        positions[2] = Position.DC;
-        positions[3] = Position.WBR;
-        positions[4] = Position.WBL;
-        positions[5] = Position.DM;
-        positions[6] = Position.MR;
-        positions[7] = Position.ML;
-        positions[8] = Position.MC;
-        positions[9] = Position.AMR;
-        positions[10] = Position.AML;
-        positions[11] = Position.AMC;
-        positions[12] = Position.STC;
+        PP2Universal pp2Universal = new PP2Universal(apps, mins, minsPerGame, playerOfTheMatch,
+                goalLeadingMistakes, avgRating);
+        player.setPp2Universal(pp2Universal);
+        Storage.storePP2Universal(pp2Universal);
 
-        for (int i = 0; i < files.length; i++) {
-            try {
-                Scanner reader = new Scanner(files[i]);
-
-                while (reader.hasNextLine()) {
-                    String line = reader.nextLine();
-                    if (line.equals(player.getPositionString()))
-                        player.addPosition(positions[i]);
-                    else if (player.getPositionString().contains("GK"))
-                        player.addPosition(Position.GK);
-                }
-                reader.close();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        return pp2Universal;
     }
 
     public static void createPlayerFromHTML(String filePath) {
         File file = new File("C:\\Users\\failo\\Documents\\Sports Interactive\\" +
-                "Football Manager 2024\\Test.html");
+                "Football Manager 2024\\AllColumns.html");
         //file = new File(filePath);
 
         try {
             Document document = Jsoup.parse(file);
 
-
-
-//            int count = 0;
-//            for (Element heading : document.select("table th")) {
-//                count++;
+            int count = 0;
+            for (Element heading : document.select("table th")) {
+                count++;
 //                System.out.println(count + " " + heading.text());
-//            }
+                System.out.println(heading.text());
+            }
 
 
 
             for (Element row : document.select("table tr")) {
                 if (row.select("td").text().isEmpty()) continue;
-                String name = row.select("td:nth-child(1)").text();
 
-                int age = Integer.parseInt(row.select("td:nth-child(2)").text());
+                String division = row.select("td:nth-child(1)").text();
+                String club = row.select("td:nth-child(2)").text();
+                String name = row.select("td:nth-child(3)").text();
+                int age = Integer.parseInt(row.select("td:nth-child(4)").text());
+                String positionString = row.select("td:nth-child(5)").text();
+                String nationality = row.select("td:nth-child(6)").text();
+                String secondNationality = row.select("td:nth-child(7)").text();
 
-                String positionString = row.select("td:nth-child(3)").text();
-
-                String nationality = row.select("td:nth-child(4)").text();
-
-                String heightString = row.select("td:nth-child(5)").text();
+                String heightString = row.select("td:nth-child(8)").text();
                 heightString = heightString.replaceAll("\\s.*", "");
                 int height = Integer.parseInt(heightString);
 
-                String weightString = row.select("td:nth-child(6)").text();
-                weightString = weightString.replaceAll("\\s.*", "");
-                int weight = Integer.parseInt(weightString);
+                String personality = row.select("td:nth-child(9)").text();
+                String recurringInjury = row.select("td:nth-child(10)").text();
+                String euNational = row.select("td:nth-child(11)").text();
+                String homeGrownStatus = row.select("td:nth-child(12)").text();
+                String prefFoot = row.select("td:nth-child(13)").text();
+                String wage = row.select("td:nth-child(14)").text();
+                String expires = row.select("td:nth-child(15)").text();
+                String transferStatus = row.select("td:nth-child(16)").text();
+                String transferValue = row.select("td:nth-child(17)").text();
+                String wpNeeded = row.select("td:nth-child(18)").text();
+                String wpChance = row.select("td:nth-child(19)").text();
 
-                String personality = row.select("td:nth-child(7)").text();
-
-                String recurringInjury = row.select("td:nth-child(8)").text();
-
-                createPlayer(name, age, positionString, nationality, height, weight,
-                        personality, recurringInjury);
+                Player player = createPlayer(division, club, name, age, positionString, nationality, secondNationality,
+                        height, personality, recurringInjury, euNational, homeGrownStatus, prefFoot, wage,
+                        expires, transferStatus, transferValue, wpNeeded, wpChance);
+                //createPP2Universal(player, );
             }
         } catch (Exception e) {
             System.out.println(e);
