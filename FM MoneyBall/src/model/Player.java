@@ -37,6 +37,7 @@ public class Player {
     private PP7AerialChallenges pp7AerialChallenges;
     private PP8Movement pp8Movement;
     private PP9TacklesAndInterceptions pp9TacklesAndInterceptions;
+    private PP10Saves pp10Saves;
 
 
 
@@ -184,6 +185,13 @@ public class Player {
     }
     //____PP2Universal__________________________________________________________________________________________________
 
+    //____PP3CustomStats________________________________________________________________________________________________
+    public void setPp3CustomStats(PP3CustomStats pp3CustomStats) {
+        this.pp3CustomStats = pp3CustomStats;
+    }
+    //____PP3CustomStats________________________________________________________________________________________________
+
+
     //____PP4Shots______________________________________________________________________________________________________
     public void setPp4Shots(PP4Shots pp4Shots) {
         this.pp4Shots = pp4Shots;
@@ -262,7 +270,125 @@ public class Player {
     }
     //____PP5Passes_____________________________________________________________________________________________________
 
+    //____PP6Crosses____________________________________________________________________________________________________
+    public void setPp6Crosses(PP6Crosses pp6Crosses) {
+        this.pp6Crosses = pp6Crosses;
+    }
 
+    public double getOpenPlayCrossesCompletedPer90() {
+        return pp6Crosses.getOpenPlayCrossesCompletedPer90();
+    }
+    public int getOpenPlayCrossesCompletedRatio() {
+        return pp6Crosses.getOpenPlayCrossesCompletedRatio();
+    }
+
+    //____PP6Crosses____________________________________________________________________________________________________
+
+    //____PP7AerialChallenges___________________________________________________________________________________________
+    public void setPp7AerialChallenges(PP7AerialChallenges pp7AerialChallenges) {
+        this.pp7AerialChallenges = pp7AerialChallenges;
+    }
+
+    public double getKeyHeadersPer90() {
+        return pp7AerialChallenges.getKeyHeadersPer90();
+    }
+    public int getHeadersWonRatio() {
+        return pp7AerialChallenges.getHeadersWonRatio();
+    }
+    public double getHeadersWonPer90() {
+        return pp7AerialChallenges.getHeadersWonPer90();
+    }
+    //____PP7AerialChallenges___________________________________________________________________________________________
+
+    //____PP8Movement___________________________________________________________________________________________________
+    public void setPp8Movement(PP8Movement pp8Movement) {
+        this.pp8Movement = pp8Movement;
+    }
+
+    public int getFoulsAgainst() {
+        return pp8Movement.getFoulsAgainst();
+    }
+    public double getPressuresCompletedPer90() {
+        return pp8Movement.getPressuresCompletedPer90();
+    }
+    public double getPressuresAttemptedPer90() {
+        return pp8Movement.getPressuresAttemptedPer90();
+    }
+    public int getPressuresCompletedRatio() {
+        return pp8Movement.getPressuresCompletedRatio();
+    }
+    public double getSprintsPer90() {
+        return pp8Movement.getSprintsPer90();
+    }
+    public double getDribblesPer90() {
+        return pp8Movement.getDribblesPer90();
+    }
+    public double getDistanceCoveredPer90() {
+        return pp8Movement.getDistanceCoveredPer90();
+    }
+    public double getPossessionLostPer90() {
+        return pp8Movement.getPossessionLostPer90();
+    }
+    //____PP8Movement___________________________________________________________________________________________________
+
+    //____PP9TacklesAndInterceptions____________________________________________________________________________________
+    public void setPp9TacklesAndInterceptions(PP9TacklesAndInterceptions pp9TacklesAndInterceptions) {
+        this.pp9TacklesAndInterceptions = pp9TacklesAndInterceptions;
+    }
+
+    public int getFoulsCommitted() {
+        return pp9TacklesAndInterceptions.getFoulsCommitted();
+    }
+    public double getTacklesWonPer90() {
+        return pp9TacklesAndInterceptions.getTacklesWonPer90();
+    }
+    public int getTacklesWonRatio() {
+        return pp9TacklesAndInterceptions.getTacklesWonRatio();
+    }
+    public double getShotsBlockedPer90() {
+        return pp9TacklesAndInterceptions.getShotsBlockedPer90();
+    }
+    public double getPossessionWonPer90() {
+        return pp9TacklesAndInterceptions.getPossessionWonPer90();
+    }
+    public double getKeyTacklesPer90() {
+        return pp9TacklesAndInterceptions.getKeyTacklesPer90();
+    }
+    public double getInterceptionsPer90() {
+        return pp9TacklesAndInterceptions.getInterceptionsPer90();
+    }
+    public double getClearancesPer90() {
+        return pp9TacklesAndInterceptions.getClearancesPer90();
+    }
+    public double getBlocksPer90() {
+        return pp9TacklesAndInterceptions.getBlocksPer90();
+    }
+    //____PP9TacklesAndInterceptions____________________________________________________________________________________
+
+    //____PP10Saves_____________________________________________________________________________________________________
+    public void setPp10Saves(PP10Saves pp10Saves) {
+        this.pp10Saves = pp10Saves;
+    }
+
+    public double getSavesPer90() {
+        return pp10Saves.getSavesPer90();
+    }
+    public double getConcededPer90() {
+        return pp10Saves.getConcededPer90();
+    }
+    public double getCleanSheetsPer90() {
+        return pp10Saves.getCleanSheetsPer90();
+    }
+    public int getSaveRatio() {
+        return pp10Saves.getSaveRatio();
+    }
+    public int getXsaveRatio() {
+        return pp10Saves.getXsaveRatio();
+    }
+    public double getXGoalsPreventedPer90() {
+        return pp10Saves.getxGoalsPreventedPer90();
+    }
+    //____PP10Saves_____________________________________________________________________________________________________
 
     public void addPosition(Position position) {
         positions.add(position);
@@ -307,6 +433,35 @@ public class Player {
 
     @Override
     public String toString() {
-        return null;
+        return "Player{" +
+                "division='" + division + '\'' +
+                ", club='" + club + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", positionString='" + positionString + '\'' +
+                ", positions=" + positions +
+                ", nationality='" + nationality + '\'' +
+                ", secondNationality='" + secondNationality + '\'' +
+                ", height=" + height +
+                ", personality='" + personality + '\'' +
+                ", recurringInjury='" + recurringInjury + '\'' +
+                ", euNational='" + euNational + '\'' +
+                ", homeGrownStatus='" + homeGrownStatus + '\'' +
+                ", preferredFoot='" + preferredFoot + '\'' +
+                ", wage='" + wage + '\'' +
+                ", contractExpiryDate=" + contractExpiryDate +
+                ", transferValue='" + transferValue + '\'' +
+                ", wpNeeded='" + wpNeeded + '\'' +
+                ", wpChance='" + wpChance + '\'' +
+                ", pp2Universal=" + pp2Universal.toString() +
+                ", pp3CustomStats=" + pp3CustomStats.toString() +
+                ", pp4Shots=" + pp4Shots.toString() +
+                ", pp5Passes=" + pp5Passes.toString() +
+                ", pp6Crosses=" + pp6Crosses.toString() +
+                ", pp7AerialChallenges=" + pp7AerialChallenges.toString() +
+                ", pp8Movement=" + pp8Movement.toString() +
+                ", pp9TacklesAndInterceptions=" + pp9TacklesAndInterceptions.toString() +
+                ", pp10Saves=" + pp10Saves.toString() +
+                '}';
     }
 }

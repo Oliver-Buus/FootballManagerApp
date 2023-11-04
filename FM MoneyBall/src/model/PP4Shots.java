@@ -109,4 +109,27 @@ public class PP4Shots {
         return conversionRatio;
     }
 
+    @Override
+    public String toString() {
+        return "PP4Shots{" +
+                "goals=" + goals +
+                ", xG=" + xG +
+                ", npxG=" + npxG +
+                ", glsPer90=" + glsPer90 +
+                ", xGPer90=" + xGPer90 +
+                ", npxGPer90=" + npxGPer90 +
+                ", xGOP=" + xGOP +
+                ", minsPerGoal=" + minsPerGoal +
+                ", shotsPer90=" + shotsPer90 +
+                ", shotsOnTargetRatio=" + shotsOnTargetRatio +
+                ", shotsOnTargetPer90=" + shotsOnTargetPer90 +
+                ", shotsOnTarget=" + shotsOnTarget +
+                ", shotsOutsideBoxPer90=" + shotsOutsideBoxPer90 +
+                ", shots=" + shots +
+                ", goalsOutsideBox=" + goalsOutsideBox +
+                ", freekickShots=" + freekickShots +
+                ", xGPerShot=" + xGPerShot +
+                ", conversionRatio=" + conversionRatio +
+                '}';
+    }
 }

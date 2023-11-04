@@ -14,7 +14,7 @@
         -fx-cursor: hand;
 }
 
-.root {
+.custom-gridpane {
         -fx-background-color: "#6aa891";
         -fx-focus-color: transparent;
         -fx-font-family: 'Roboto Condensed', sans-serif;

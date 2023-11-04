@@ -66,4 +66,20 @@ public class PP5Passes {
     public double getChancesCreatedPer90() {
         return chancesCreatedPer90;
     }
+
+    @Override
+    public String toString() {
+        return "PP5Passes{" +
+                "assists=" + assists +
+                ", assistsPer90=" + assistsPer90 +
+                ", xA=" + xA +
+                ", xAPer90=" + xAPer90 +
+                ", prPassesPer90=" + prPassesPer90 +
+                ", passesCompletedPer90=" + passesCompletedPer90 +
+                ", passCompletionRatio=" + passCompletionRatio +
+                ", openPlayKeyPassesPer90=" + openPlayKeyPassesPer90 +
+                ", keyPassesPer90=" + keyPassesPer90 +
+                ", chancesCreatedPer90=" + chancesCreatedPer90 +
+                '}';
+    }
 }

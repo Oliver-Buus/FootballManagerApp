@@ -49,4 +49,16 @@ public class PP2Universal {
     public double getAvgRating() {
         return avgRating;
     }
+
+    @Override
+    public String toString() {
+        return "PP2Universal{" +
+                "apps='" + apps + '\'' +
+                ", mins=" + mins +
+                ", minsPerGame=" + minsPerGame +
+                ", playerOfTheMatch=" + playerOfTheMatch +
+                ", goalLeadingMistakes=" + goalLeadingMistakes +
+                ", avgRating=" + avgRating +
+                '}';
+    }
 }
