@@ -1,5 +1,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 
+
+
 .button {
         -fx-font-size: 14px;
         -fx-font-family: 'Roboto Condensed', sans-serif;
@@ -15,6 +17,8 @@
 .root {
         -fx-background-color: "#6aa891";
         -fx-focus-color: transparent;
+        -fx-font-family: 'Roboto Condensed', sans-serif;
+        -fx-font-weight: 700;
 }
 
 .table-view {
@@ -34,6 +38,7 @@
 }
 
 
+
 .table-cell {
         -fx-background-color: "#78bfa4";
         -fx-border-color: "#518f78";
@@ -45,8 +50,27 @@
         -fx-padding: 2px;
 }
 
-
+/*
 .table-view .scroll-bar:vertical {
         -fx-opacity: 0;
         -fx-pref-width: 0;
 }
+*/
+
+.highlighted-cell-shots {
+    /*-fx-text-fill: "#609e87"; /* Ændr denne farve til din ønskede tekstfarve */
+    /*-fx-background-color: "#609e87"; /* Ændr denne farve til din ønskede baggrundsfarve */
+}
+
+.column-header.highlighted-cell-shots {
+    -fx-background-color: "#84609e"; /* Ændr denne farve til din ønskede baggrundsfarve */
+    -fx-text-fill: white; /* Ændr denne farve til din ønskede tekstfarve */
+    -fx-font-weight: bold; /* Gør teksten fed (valgfrit) */
+}
+
+.column-header.highlighted-cell-passes {
+    -fx-background-color: "#c87305"; /* Ændr denne farve til din ønskede baggrundsfarve */
+    -fx-text-fill: white; /* Ændr denne farve til din ønskede tekstfarve */
+    -fx-font-weight: bold; /* Gør teksten fed (valgfrit) */
+}
+

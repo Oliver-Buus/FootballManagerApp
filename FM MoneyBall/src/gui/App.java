@@ -10,14 +10,14 @@ public class App {
         Controller.createPlayerFromHTML("");
         Menu.launch(Menu.class);
 
-        for (Player player : Storage.getPlayers()) {
-            if (player.getPositions().contains(Position.MC)) {
-                System.out.println(player.toString());
-            }
-            if (player.getName().contains("Brekalo")) {
-                System.out.println(player.toString());
-            }
-        }
+//        for (Player player : Storage.getPlayers()) {
+//            if (player.getPositions().contains(Position.MC)) {
+//                System.out.println(player.toString());
+//            }
+//            if (player.getName().contains("Brekalo")) {
+//                System.out.println(player.toString());
+//            }
+//        }
     }
 
 

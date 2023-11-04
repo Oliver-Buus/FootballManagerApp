@@ -2,9 +2,12 @@ package model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class Player {
+
+    // PlayerInfo
     private final String division;
     private final String club;
     private final String name;
@@ -12,20 +15,20 @@ public class Player {
     private final String positionString;
     private List<Position> positions = new ArrayList<>(); // Link til Position
     private final String nationality;
-    private final String secondNationality;
+    private String secondNationality;
     private final int height;
     private final String personality;
     private final String recurringInjury;
-    private final String euNational;
-    private final String homeGrownStatus;
+    private String euNational;
+    private String homeGrownStatus;
     private final String preferredFoot;
     private final String wage;
-    private final String contractExpiryDate;
-    private final String transferStatus;
+    private final LocalDate contractExpiryDate;
     private final String transferValue;
-    private final String wpNeeded;
-    private final String wpChance;
+    private String wpNeeded;
+    private String wpChance;
 
+    // Player Performance links
     private PP2Universal pp2Universal;
     private PP3CustomStats pp3CustomStats;
     private PP4Shots pp4Shots;
@@ -36,10 +39,11 @@ public class Player {
     private PP9TacklesAndInterceptions pp9TacklesAndInterceptions;
 
 
+
     public Player(String division, String club, String name, int age, String positionString, String nationality,
                   String secondNationality, int height, String personality, String recurringInjury,
                   String euNational, String homeGrownStatus, String preferredFoot, String wage,
-                  String contractExpiryDate, String transferStatus, String transferValue, String wpNeeded,
+                  LocalDate contractExpiryDate, String transferValue, String wpNeeded,
                   String wpChance) {
         this.division = division;
         this.club = club;
@@ -56,10 +60,27 @@ public class Player {
         this.preferredFoot = preferredFoot;
         this.wage = wage;
         this.contractExpiryDate = contractExpiryDate;
-        this.transferStatus = transferStatus;
         this.transferValue = transferValue;
         this.wpNeeded = wpNeeded;
         this.wpChance = wpChance;
+    }
+
+    public Player(String division, String club, String name, int age, String positionString, String nationality,
+                  int height, String personality, String recurringInjury, String preferredFoot, String wage,
+                  LocalDate contractExpiryDate, String transferValue) {
+        this.division = division;
+        this.club = club;
+        this.name = name;
+        this.age = age;
+        this.positionString = positionString;
+        this.nationality = nationality;
+        this.height = height;
+        this.personality = personality;
+        this.recurringInjury = recurringInjury;
+        this.preferredFoot = preferredFoot;
+        this.wage = wage;
+        this.contractExpiryDate = contractExpiryDate;
+        this.transferValue = transferValue;
     }
 
     public String getDivision() {
@@ -122,12 +143,8 @@ public class Player {
         return wage;
     }
 
-    public String getContractExpiryDate() {
+    public LocalDate getContractExpiryDate() {
         return contractExpiryDate;
-    }
-
-    public String getTransferStatus() {
-        return transferStatus;
     }
 
     public String getTransferValue() {
@@ -142,72 +159,113 @@ public class Player {
         return wpChance;
     }
 
-    public PP2Universal getPp2Universal() {
-        return pp2Universal;
-    }
-
-    public PP3CustomStats getPp3CustomStats() {
-        return pp3CustomStats;
-    }
-
-    public PP4Shots getPp4Shots() {
-        return pp4Shots;
-    }
-
-    public PP5Passes getPp5Passes() {
-        return pp5Passes;
-    }
-
-    public PP6Crosses getPp6Crosses() {
-        return pp6Crosses;
-    }
-
-    public PP7AerialChallenges getPp7AerialChallenges() {
-        return pp7AerialChallenges;
-    }
-
-    public PP8Movement getPp8Movement() {
-        return pp8Movement;
-    }
-
-    public PP9TacklesAndInterceptions getPp9TacklesAndInterceptions() {
-        return pp9TacklesAndInterceptions;
-    }
-
-    public void addPosition(Position position) {
-        positions.add(position);
-    }
-
+    //____PP2Universal__________________________________________________________________________________________________
     public void setPp2Universal(PP2Universal pp2Universal) {
         this.pp2Universal = pp2Universal;
     }
 
-    public void setPp3CustomStats(PP3CustomStats pp3CustomStats) {
-        this.pp3CustomStats = pp3CustomStats;
+    public String getApps() {
+        return pp2Universal.getApps();
     }
+    public int getMins() {
+        return pp2Universal.getMins();
+    }
+    public double getMinsPerGame() {
+        return pp2Universal.getMinsPerGame();
+    }
+    public int getPlayerOfTheMatch() {
+        return pp2Universal.getPlayerOfTheMatch();
+    }
+    public int getGoalLeadingMistakes() {
+        return pp2Universal.getGoalLeadingMistakes();
+    }
+    public double getAvgRating() {
+        return pp2Universal.getAvgRating();
+    }
+    //____PP2Universal__________________________________________________________________________________________________
 
+    //____PP4Shots______________________________________________________________________________________________________
     public void setPp4Shots(PP4Shots pp4Shots) {
         this.pp4Shots = pp4Shots;
     }
 
+    public int getGoals() {
+        return pp4Shots.getGoals();
+    }
+    public double getNpxG() {
+        return pp4Shots.getNpxG();
+    }
+    public double getGlsPer90() {
+        return pp4Shots.getGlsPer90();
+    }
+    public double getNpxGPer90() {
+        return pp4Shots.getNpxGPer90();
+    }
+    public double getMinsPerGoal() {
+        return pp4Shots.getMinsPerGoal();
+    }
+    public double getShotsPer90() { return pp4Shots.getShotsPer90();}
+    public int getShotsOnTargetRatio() {
+        return pp4Shots.getShotsOnTargetRatio();
+    }
+    public double getShotsOnTargetPer90() {
+        return pp4Shots.getShotsOnTargetPer90();
+    }
+    public double getShotsOutsideBoxPer90() {
+        return pp4Shots.getShotsOutsideBoxPer90();
+    }
+    public int getGoalsOutsideBox() {
+        return pp4Shots.getGoalsOutsideBox();
+    }
+    public double getXGPerShot() {
+        return pp4Shots.getxGPerShot();
+    }
+    public int getConversionRatio() {
+        return pp4Shots.getConversionRatio();
+    }
+    //____PP4Shots______________________________________________________________________________________________________
+
+    //____PP5Passes_____________________________________________________________________________________________________
     public void setPp5Passes(PP5Passes pp5Passes) {
         this.pp5Passes = pp5Passes;
     }
 
-    public void setPp6Crosses(PP6Crosses pp6Crosses) {
-        this.pp6Crosses = pp6Crosses;
+    public int getAssists() {
+        return pp5Passes.getAssists();
     }
-
-    public void setPp7AerialChallenges(PP7AerialChallenges pp7AerialChallenges) {
-        this.pp7AerialChallenges = pp7AerialChallenges;
+    public double getAssistsPer90() {
+        return pp5Passes.getAssistsPer90();
     }
-
-    public void setPp8Movement(PP8Movement pp8Movement) {
-        this.pp8Movement = pp8Movement;
+    public double getXA() {
+        return pp5Passes.getxA();
     }
+    public double getXAPer90() {
+        return pp5Passes.getxAPer90();
+    }
+    public double getPrPassesPer90() {
+        return pp5Passes.getPrPassesPer90();
+    }
+    public double getPassesCompletedPer90() {
+        return pp5Passes.getPassesCompletedPer90();
+    }
+    public int getPassCompletionRatio() {
+        return pp5Passes.getPassCompletionRatio();
+    }
+    public double getOpenPlayKeyPassesPer90() {
+        return pp5Passes.getOpenPlayKeyPassesPer90();
+    }
+    public double getKeyPassesPer90() {
+        return pp5Passes.getKeyPassesPer90();
+    }
+    public double getChancesCreatedPer90() {
+        return pp5Passes.getChancesCreatedPer90();
+    }
+    //____PP5Passes_____________________________________________________________________________________________________
 
-    public void setPp9TacklesAndInterceptions(PP9TacklesAndInterceptions pp9TacklesAndInterceptions) {
-        this.pp9TacklesAndInterceptions = pp9TacklesAndInterceptions;
+
+
+    public void addPosition(Position position) {
+        positions.add(position);
     }
 
     public void addPositionsToPlayer() {

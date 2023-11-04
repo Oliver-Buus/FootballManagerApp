@@ -2,25 +2,18 @@ package gui;
 
 import controller.Controller;
 import javafx.application.Application;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Player;
 import model.Position;
-import storage.Storage;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 public class Menu extends Application {
@@ -32,8 +25,13 @@ public class Menu extends Application {
         stage = primaryStage;
         stage.setTitle("NONAMEYET");
         //stage.getIcons().add(new Image("")); // Ændrer appens ikon
+        String css = this.getClass().getResource("/css/Menu.css").toExternalForm();
+
+        VBox root = new VBox(menuBar);
+        Scene scene1 = new Scene(root);
 
         scene = sceneMain();
+        scene.getStylesheets().add(css);
 
         stage.setScene(scene);
         stage.centerOnScreen();
@@ -44,6 +42,7 @@ public class Menu extends Application {
     private static TableView<Player> tvwPlayers = new TableView<>(); // Tabel med spillere og deres info
     private static ComboBox<String> cbbPlayerPosition = new ComboBox<>(); // Combobox til at vælge positioner
     private static Label lblFilter = new Label("Filters");
+    private static Label lblPlayerAmount = new Label();
     private static Label lblAge = new Label("Age");
     private static Label lblPosition = new Label("Position");
     private static Label lblHeight = new Label("Height");
@@ -53,7 +52,12 @@ public class Menu extends Application {
     private static TextField txfHeightMax = new TextField();
     private static Button btnFilter = new Button("Filter");
     private static Button btnResetFilters = new Button("Reset");
+    private static MenuBar menuBar = new MenuBar();
 
+
+    private static List<TableColumn> baseStatsList = new ArrayList();
+    private static List<TableColumn> shotStatsList = new ArrayList();
+    private static List<TableColumn> passesStatsList = new ArrayList();
 
 
     //__________________________________________________________________________________________________________________
@@ -104,24 +108,31 @@ public class Menu extends Application {
 
         //______________________________________________________________________________________________________________
         // ADD TO PANE
-        pane.add(tvwPlayers, 0, 0, 8, 1);
-        pane.add(lblFilter, 0, 1);
-        pane.add(lblAge, 0, 2);
-        pane.add(txfAgeMin, 1, 2);
-        pane.add(txfAgeMax, 1, 2);
+        pane.add(menuBar, );
+        pane.add(lblPlayerAmount, 0, 0);
+        pane.add(tvwPlayers, 0, 1, 8, 1);
+        pane.add(lblFilter, 0, 2);
+        pane.add(lblAge, 0, 3);
+        pane.add(txfAgeMin, 1, 3);
+        pane.add(txfAgeMax, 1, 3);
         GridPane.setMargin(txfAgeMax, new Insets(0, 0, 0, 55));
-        pane.add(lblPosition, 0, 3);
-        pane.add(cbbPlayerPosition, 1, 3, 2, 1);
-        pane.add(lblHeight, 0, 4);
-        pane.add(txfHeightMin, 1, 4);
-        pane.add(txfHeightMax, 1, 4);
+        pane.add(lblPosition, 0, 4);
+        pane.add(cbbPlayerPosition, 1, 4, 2, 1);
+        pane.add(lblHeight, 0, 5);
+        pane.add(txfHeightMin, 1, 5);
+        pane.add(txfHeightMax, 1, 5);
         GridPane.setMargin(txfHeightMax, new Insets(0, 0, 0, 55));
         pane.add(btnFilter,0, 10);
         pane.add(btnResetFilters, 1, 10);
         //______________________________________________________________________________________________________________
 
         tvwPlayers.getItems().setAll(Controller.getAllPlayers());
+        lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
         tvwPlayers.setPrefWidth(1560);
+        tvwPlayers.skinProperty().addListener((obs, ol, ne) -> {
+            Pane header = (Pane) tvwPlayers.lookup("TableHeaderRow");
+            header.prefHeightProperty().bind(tvwPlayers.heightProperty().divide(8));
+        });
 
         return scene;
     }
@@ -129,33 +140,79 @@ public class Menu extends Application {
     public static void createTableViewColumns() {
 
 
-        addColumn(tvwPlayers, "Division", "division", "");
-        addColumn(tvwPlayers, "Club", "club", "");
-        addColumn(tvwPlayers, "Name", "name", "");
-        addColumn(tvwPlayers, "Age", "age", "");
-        addColumn(tvwPlayers, "Position", "positionString", "");
-        addColumn(tvwPlayers, "Nat", "nationality", "");
-        addColumn(tvwPlayers, "2nd\nNat", "secondNationality", "");
-        addColumn(tvwPlayers, "Height", "height", "");
-        addColumn(tvwPlayers, "Personality", "personality", "");
-        addColumn(tvwPlayers, "Rc Injury", "recurringInjury", "");
-        addColumn(tvwPlayers, "EU National", "euNational", "");
-        addColumn(tvwPlayers, "Home-Grown Status", "homeGrownStatus", "");
-        addColumn(tvwPlayers, "Preferred Foot", "preferredFoot", "");
-        GuiUtils.createWageComparator(addColumn(tvwPlayers, "Wage", "wage", ""));
-        addColumn(tvwPlayers, "Expires", "contractExpiryDate", "");
-        addColumn(tvwPlayers, "Transfer Status", "transferStatus", "");
-        addColumn(tvwPlayers, "Transfer Value", "transferValue", "");
-        addColumn(tvwPlayers, "WP Needed", "wpNeeded", "Work Permit Needed");
-        addColumn(tvwPlayers, "WP Chance", "wpChance", "");
+        // Player
+        baseStatsList.add(addColumn(tvwPlayers, "Club", "club"));
+        baseStatsList.add(addColumn(tvwPlayers, "Name", "name"));
+        baseStatsList.add(addColumn(tvwPlayers, "Age", "age"));
+        baseStatsList.add(addColumn(tvwPlayers, "Positions", "positionString"));
+        baseStatsList.add(addColumn(tvwPlayers, "Nationality", "nationality"));
+        baseStatsList.add(addColumn(tvwPlayers, "Height", "height"));
+        baseStatsList.add(addColumn(tvwPlayers, "Personality", "personality"));
+        baseStatsList.add(addColumn(tvwPlayers, "Recurring Injury", "recurringInjury"));
+        baseStatsList.add(addColumn(tvwPlayers, "Preferred Foot", "preferredFoot"));
+        TableColumn wageColumn = addColumn(tvwPlayers, "Wage", "wage");
+        GuiUtils.createWageComparator(wageColumn);
+        baseStatsList.add(wageColumn);
+        baseStatsList.add(addColumn(tvwPlayers, "Contract Expiry Date", "contractExpiryDate"));
+        baseStatsList.add(addColumn(tvwPlayers, "Transfer Value", "transferValue"));
 
+        // PP2Universal
+        TableColumn appsColumn = addColumn(tvwPlayers, "Appearences", "apps");
+        GuiUtils.createAppsComparator(appsColumn);
+        baseStatsList.add(appsColumn);
+        baseStatsList.add(addColumn(tvwPlayers, "Minutes Played", "mins"));
+        baseStatsList.add(addColumn(tvwPlayers, "Minutes/Game", "minsPerGame"));
+        baseStatsList.add(addColumn(tvwPlayers, "Average Rating", "avgRating"));
+
+        // PP3CustomStats
+
+
+        // PP4Shots
+        shotStatsList.add(addColumn(tvwPlayers, "Goals", "goals"));
+        shotStatsList.add(addColumn(tvwPlayers, "Goals/90", "glsPer90"));
+        shotStatsList.add(addColumn(tvwPlayers, "Non-Penalty xG", "npxG"));
+        shotStatsList.add(addColumn(tvwPlayers, "Non-Penalty xG/90", "npxGPer90"));
+        shotStatsList.add(addColumn(tvwPlayers, "Minutes/Goal", "minsPerGoal"));
+        shotStatsList.add(addColumn(tvwPlayers, "Shots/90", "shotsPer90"));
+        shotStatsList.add(addColumn(tvwPlayers, "Shots on Target %", "shotsOnTargetRatio"));
+        shotStatsList.add(addColumn(tvwPlayers, "Shots on Target/90", "shotsOnTargetPer90"));
+        shotStatsList.add(addColumn(tvwPlayers, "Shots Outside Box/90", "shotsOutsideBoxPer90"));
+        shotStatsList.add(addColumn(tvwPlayers, "Goals Outside Box", "goalsOutsideBox"));
+        shotStatsList.add(addColumn(tvwPlayers, "xG/Shot", "xGPerShot"));
+        shotStatsList.add(addColumn(tvwPlayers, "Goals/Shot", "conversionRatio"));
+
+        // PP5Passes
+        passesStatsList.add(addColumn(tvwPlayers, "Assists", "assists"));
+        passesStatsList.add(addColumn(tvwPlayers, "Assists/90", "assistsPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Expected Assists", "xA"));
+        passesStatsList.add(addColumn(tvwPlayers, "Expected Assists/90", "xAPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Progressive Passes/90", "prPassesPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Passes Completed/90", "passesCompletedPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Pass Completion %", "passCompletionRatio"));
+        passesStatsList.add(addColumn(tvwPlayers, "Open Play Key Passes/90", "openPlayKeyPassesPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Key Passes Per 90", "keyPassesPer90"));
+        passesStatsList.add(addColumn(tvwPlayers, "Chances Created/90", "chancesCreatedPer90"));
+
+
+
+
+
+        for (TableColumn shotColumn : shotStatsList) {
+            applyCellStyleToColumn(shotColumn, "highlighted-cell-shots");
+        }
+
+        for (TableColumn passColumn : passesStatsList) {
+            applyCellStyleToColumn(passColumn, "highlighted-cell-passes");
+        }
+
+        for (TableColumn tableColumn : tvwPlayers.getColumns()) {
+            tableColumn.setPrefWidth(tableColumn.getWidth() + 3);
+        }
         tvwPlayers.setPrefHeight(480);
-
 
     }
 
-    public static <S, T> TableColumn addColumn(TableView<S> tableView, String columName, String propertyName,
-                                               String tooltipText) {
+    public static <S, T> TableColumn addColumn(TableView<S> tableView, String columName, String propertyName) {
         Label label = new Label(columName);
         label.setWrapText(true);
 
@@ -168,14 +225,6 @@ public class Menu extends Application {
         return column;
     }
 
-    public static <S> void createWageComparator(TableColumn<S, String> wageColumn) {
-        Comparator<String> wageComparator = (wage1, wage2) -> {
-            int wage1Value = Integer.parseInt(wage1.replaceAll("[^0-9]", ""));
-            int wage2Value = Integer.parseInt(wage2.replaceAll("[^0-9]", ""));
-            return Integer.compare(wage1Value, wage2Value);
-        };
-        wageColumn.setComparator(wageComparator);
-    }
 
     public static void addToCbbPlayerPosition() {
         cbbPlayerPosition.getItems().add("Any");
@@ -188,20 +237,21 @@ public class Menu extends Application {
         List<Player> currentPlayersList = new ArrayList<>(Controller.getAllPlayers());
 
         if (!txfAgeMin.getText().isEmpty() || !txfAgeMax.getText().isEmpty())
-        currentPlayersList = filterByAge(currentPlayersList);
+        currentPlayersList = GuiFilters.filterByAge(currentPlayersList, txfAgeMin, txfAgeMax);
 
         if (!cbbPlayerPosition.getValue().equals("Any"))
-        currentPlayersList = filterByPosition(currentPlayersList, cbbPlayerPosition.getValue());
+        currentPlayersList = GuiFilters.filterByPosition(currentPlayersList, cbbPlayerPosition.getValue());
 
         if (!txfHeightMin.getText().isEmpty() || !txfHeightMax.getText().isEmpty())
-        currentPlayersList = filterByHeight(currentPlayersList);
+        currentPlayersList = GuiFilters.filterByHeight(currentPlayersList, txfHeightMin, txfHeightMax);
+
 
 
         // TODO Filters for nationality and more
-        //
-
 
         tvwPlayers.getItems().setAll(currentPlayersList);
+        lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
+
     }
 
     public static void resetFilters() {
@@ -211,49 +261,11 @@ public class Menu extends Application {
         txfHeightMax.setText("");
         txfAgeMin.setText("");
         txfAgeMax.setText("");
+        lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
     }
 
-    public static List<Player> filterByAge(List<Player> players) {
-        if (txfAgeMin.getText().isEmpty()) txfAgeMin.setText("0");
-        else if (txfAgeMax.getText().isEmpty()) txfAgeMax.setText("100");
-
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getAge() >= Integer.parseInt(txfAgeMin.getText()) &&
-                    player.getAge() <= Integer.parseInt(txfAgeMax.getText())) {
-                filteredData.add(player);
-            }
-        }
-
-        return filteredData;
-    }
-    public static List<Player> filterByPosition(List<Player> players, String selectedPosition) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            for (Position position : player.getPositions()) {
-                if (position.toString().equals(selectedPosition)) {
-                    filteredData.add(player);
-                    break;
-                }
-            }
-        }
-
-        return filteredData;
-    }
-    public static List<Player> filterByHeight(List<Player> players) {
-        if (txfHeightMin.getText().isEmpty()) txfHeightMin.setText("100");
-        else if (txfHeightMax.getText().isEmpty()) txfHeightMax.setText("250");
-
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getHeight() >= Integer.parseInt(txfHeightMin.getText()) &&
-                    player.getHeight() <= Integer.parseInt(txfHeightMax.getText())) {
-                filteredData.add(player);
-            }
-        }
-
-        return filteredData;
+    public static void applyCellStyleToColumn(TableColumn<?, ?> columnm, String styleClass) {
+        columnm.getStyleClass().add(styleClass);
     }
 
 
