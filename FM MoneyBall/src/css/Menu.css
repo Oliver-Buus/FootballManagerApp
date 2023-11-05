@@ -21,6 +21,8 @@
         -fx-font-weight: 700;
 }
 
+
+
 .table-view {
         -fx-text-fill: "#6aa891";
 }
@@ -70,6 +72,18 @@
 
 .column-header.highlighted-cell-passes {
     -fx-background-color: "#c87305"; /* Ændr denne farve til din ønskede baggrundsfarve */
+    -fx-text-fill: white; /* Ændr denne farve til din ønskede tekstfarve */
+    -fx-font-weight: bold; /* Gør teksten fed (valgfrit) */
+}
+
+.column-header.highlighted-cell-crosses {
+    -fx-background-color: "#f558f5"; /* Ændr denne farve til din ønskede baggrundsfarve */
+    -fx-text-fill: white; /* Ændr denne farve til din ønskede tekstfarve */
+    -fx-font-weight: bold; /* Gør teksten fed (valgfrit) */
+}
+
+.column-header.highlighted-cell-aerial {
+    -fx-background-color: "#378714"; /* Ændr denne farve til din ønskede baggrundsfarve */
     -fx-text-fill: white; /* Ændr denne farve til din ønskede tekstfarve */
     -fx-font-weight: bold; /* Gør teksten fed (valgfrit) */
 }

@@ -43,10 +43,10 @@ public class CRUD_Controller {
     //__________________________________________________________________________________________________________________
 
     //_PP3CustomStats___________________________________________________________________________________________________
-    public static PP3CustomStats createPP3CustomStats() {
-        PP3CustomStats pp3CustomStats = new PP3CustomStats();
+    public static PP3CustomStats createPP3CustomStats(double npxGOP, double offsidesPer90) {
+        PP3CustomStats pp3CustomStats = new PP3CustomStats(npxGOP, offsidesPer90);
 
-        return null;
+        return pp3CustomStats;
     }
     //__________________________________________________________________________________________________________________
 

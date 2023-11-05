@@ -189,6 +189,13 @@ public class Player {
     public void setPp3CustomStats(PP3CustomStats pp3CustomStats) {
         this.pp3CustomStats = pp3CustomStats;
     }
+
+    public double getNpxGOP() {
+        return pp3CustomStats.getNpxGOP();
+    }
+    public double getOffsidesPer90() {
+        return pp3CustomStats.getOffsidesPer90();
+    }
     //____PP3CustomStats________________________________________________________________________________________________
 
 

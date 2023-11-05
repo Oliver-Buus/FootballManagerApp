@@ -25,8 +25,23 @@ public class GuiTableView {
         list.add(addColumn(tableView, "Contract Expiry Date", "contractExpiryDate"));
         list.add(addColumn(tableView, "Transfer Value", "transferValue"));
 
+        TableColumn appsColumn = addColumn(tableView, "Appearences", "apps");
+        GuiUtils.createAppsComparator(appsColumn);
+        list.add(appsColumn);
+        list.add(addColumn(tableView, "Minutes Played", "mins"));
+        list.add(addColumn(tableView, "Minutes/Game", "minsPerGame"));
+        list.add(addColumn(tableView, "Average Rating", "avgRating"));
+
         return list;
     }
+
+    public static List<TableColumn> addCustomStatsColumns(List<TableColumn> list, TableView tableView) {
+        list.add(addColumn(tableView, "NPxG Over-Performance", "npxGOP"));
+        list.add(addColumn(tableView, "Offsides/90", "offsidesPer90"));
+
+        return list;
+    }
+
 
     public static List<TableColumn> addShotStatsColumns(List<TableColumn> list, TableView tableView) {
         list.add(addColumn(tableView, "Goals", "goals"));

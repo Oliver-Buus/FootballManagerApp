@@ -54,8 +54,13 @@ public class ReadFromHTML_Controller {
 
         double npxGOP = round((goals - penScored) - npxG, 2);
 
+        int offsides = parseInt(row.select("td:nth-child(88)").text());
+        double offsidesPer90 = 0.0;
+        int mins = player.getMins();
+        if (mins > 0 && offsides > 0) offsidesPer90 = offsides / (mins / 90.0);
+        offsidesPer90 = round(offsidesPer90, 2);
 
-        return null;
+        return CRUD_Controller.createPP3CustomStats(npxGOP, offsidesPer90);
     }
 
     public static PP4Shots createPP4ShotsFromRowInHTML(Element row) {
@@ -116,7 +121,7 @@ public class ReadFromHTML_Controller {
         int pressuresCompletedRatio = (int) ((pressuresCompletedPer90 / pressuresAttemptedPer90) * 100);
         double sprintsPer90 = parseDouble(row.select("td:nth-child(86)").text());
         double dribblesPer90 = parseDouble(row.select("td:nth-child(87)").text());
-        double distanceCoveredPer90 = parseDouble(row.select("td:nth-child(90)").text());
+        double distanceCoveredPer90 = parseDouble(row.select("td:nth-child(90)").text()); // BROKEN???
         double possessionLostPer90 = parseDouble(row.select("td:nth-child(91)").text());
 
         return CRUD_Controller.createPP8Movement(foulsAgainst, pressuresCompletedPer90, pressuresAttemptedPer90,

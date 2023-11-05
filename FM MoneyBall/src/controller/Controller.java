@@ -20,6 +20,7 @@ public class Controller {
                                         PP9TacklesAndInterceptions pp9TacklesAndInterceptions, PP10Saves pp10Saves) {
 
         player.setPp2Universal(pp2Universal);
+        player.setPp3CustomStats(pp3CustomStats);
         player.setPp4Shots(pp4Shots);
         player.setPp5Passes(pp5Passes);
         player.setPp6Crosses(pp6Crosses);
@@ -101,10 +102,6 @@ public class Controller {
                 PP3CustomStats pp3CustomStats = ReadFromHTML_Controller.createPP3CustomStatsFromRowInHTML(row, player);
                 addPPsToPlayer(player, pp2Universal, pp3CustomStats, pp4Shots, pp5Passes, pp6Crosses,
                         pp7AerialChallenges, pp8Movement, pp9TacklesAndInterceptions, pp10Saves);
-
-                addPPsToPlayer(player, pp2Universal, pp3CustomStats, pp4Shots, pp5Passes, pp6Crosses,
-                        pp7AerialChallenges, pp8Movement, pp9TacklesAndInterceptions, pp10Saves);
-
             }
         } catch (Exception e) {
             System.out.println(e);
