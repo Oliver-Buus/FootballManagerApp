@@ -175,6 +175,7 @@ public class ReadFromHTML_Controller {
 
     private static double parseDouble(String string) {
         try {
+            if (string.contains("km")) string = string.replace("km", "");
             return Double.parseDouble(string);
         } catch (Exception e) {
             return 0;

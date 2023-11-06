@@ -2,6 +2,7 @@ package gui;
 
 import controller.CRUD_Controller;
 import controller.Controller;
+import gui.filters.ShotFilters;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,20 +12,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Player;
-import model.Position;
 
 import java.util.*;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-public class MainWindow extends Application {
+public class MainGui extends Application {
     private Stage stage;
     private Scene scene;
 
@@ -46,10 +44,10 @@ public class MainWindow extends Application {
     //__________________________________________________________________________________________________________________
     private static TableView<Player> tvwPlayers = new TableView<>(); // Tabel med spillere og deres info
     private static Label lblPlayerAmount = new Label();
+    private static Button btnLoadHTML = new Button("Load HTML-file");
     private static MenuBar menuBar = new MenuBar();
     private static Menu mFile = new Menu("File");
     private static MenuItem miLoad = new MenuItem("Load HTML-file");
-    private static TreeView treeView = new TreeView<>();
     private static Accordion accordion = new Accordion();
 
 
@@ -72,7 +70,7 @@ public class MainWindow extends Application {
         gridPane.getStyleClass().add("custom-gridpane");
         borderPane.getStyleClass().add("custom-gridpane");
         bpOuter.getStyleClass().add("custom-gridpane");
-        gridPane.setPrefHeight(900);
+        gridPane.setPrefHeight(800);
         gridPane.setPrefWidth(1600);
         gridPane.setGridLinesVisible(false);
         gridPane.setPadding(new Insets(20));
@@ -82,10 +80,19 @@ public class MainWindow extends Application {
         scene = new Scene(bpOuter, gridPane.getPrefWidth(), gridPane.getPrefHeight());
 
         createTableViewColumns();
+        btnLoadHTML.getStyleClass().add("custom-button");
+        btnLoadHTML.setPrefSize(400, 200);
+
+        btnLoadHTML.setOnAction(event -> {
+            Controller.openFolder(stage);
+            GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
+//            GuiFilters.resetFilters(tvwPlayers, lblPlayerAmount);
+        });
 
         miLoad.setOnAction(event -> {
             Controller.openFolder(stage);
-            GuiFilters.resetFilters(tvwPlayers, lblPlayerAmount);
+            GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
+//            GuiFilters.resetFilters(tvwPlayers, lblPlayerAmount);
         });
 
         UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -105,6 +112,8 @@ public class MainWindow extends Application {
         lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
         tvwPlayers.setPrefWidth(1560);
         tvwPlayers.setPrefHeight(800);
+
+        tvwPlayers.setPlaceholder(btnLoadHTML);
         tvwPlayers.skinProperty().addListener((obs, ol, ne) -> {
             Pane header = (Pane) tvwPlayers.lookup("TableHeaderRow");
             header.prefHeightProperty().bind(tvwPlayers.heightProperty().divide(10));
@@ -114,13 +123,13 @@ public class MainWindow extends Application {
         menuBar.getMenus().add(mFile);
 
         //TODO ryd op i nedenstående
-        TitledPane theOne = GuiFilters.makeFilters(tvwPlayers, lblPlayerAmount);
-        accordion.getPanes().add(theOne);
+        accordion.getPanes().add(GuiFilters.makeFilters(tvwPlayers, lblPlayerAmount));
+        accordion.setExpandedPane(accordion.getPanes().get(0));
         bpOuter.setTop(menuBar);
         bpOuter.setCenter(borderPane);
 
-        borderPane.setCenter(gridPane);
         borderPane.setTop(accordion);
+        borderPane.setCenter(gridPane);
 
         return scene;
     }
@@ -153,6 +162,18 @@ public class MainWindow extends Application {
             applyCellStyleToColumn(passColumn, "highlighted-cell-aerial");
         }
 
+        for (TableColumn movementColumn : movementStatslist) {
+            applyCellStyleToColumn(movementColumn, "highlighted-cell-movement");
+        }
+
+        for (TableColumn saveColumn : tacklesStatslist) {
+            applyCellStyleToColumn(saveColumn, "highlighted-cell-tackles");
+        }
+
+        for (TableColumn tackleColumn : savesStatslist) {
+            applyCellStyleToColumn(tackleColumn, "highlighted-cell-saves");
+        }
+
 
 //        for (TableColumn tableColumn : tvwPlayers.getColumns()) {
 //            tableColumn.setPrefWidth(tableColumn.getWidth() + 3);
@@ -161,7 +182,7 @@ public class MainWindow extends Application {
 
     }
 
-    public static void applyCellStyleToColumn(TableColumn<?, ?> columnm, String styleClass) {
-        columnm.getStyleClass().add(styleClass);
+    public static void applyCellStyleToColumn(TableColumn<?, ?> column, String styleClass) {
+        column.getStyleClass().add(styleClass);
     }
 }

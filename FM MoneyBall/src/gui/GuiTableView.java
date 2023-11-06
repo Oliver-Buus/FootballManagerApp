@@ -55,7 +55,7 @@ public class GuiTableView {
         list.add(addColumn(tableView, "Shots Outside Box/90", "shotsOutsideBoxPer90"));
         list.add(addColumn(tableView, "Goals Outside Box", "goalsOutsideBox"));
         list.add(addColumn(tableView, "xG/Shot", "xGPerShot"));
-        list.add(addColumn(tableView, "Goals/Shot", "conversionRatio"));
+        list.add(addColumn(tableView, "Conversion %", "conversionRatio"));
 
         return list;
     }
@@ -98,7 +98,7 @@ public class GuiTableView {
         list.add(addColumn(tableView, "Pressures Completed%", "pressuresCompletedRatio"));
         list.add(addColumn(tableView, "High Intensity Sprints/90", "sprintsPer90"));
         list.add(addColumn(tableView, "Dribbles/90", "dribblesPer90"));
-        list.add(addColumn(tableView, "Distance Covered/90", "distanceCoveredPer90"));
+        list.add(addColumn(tableView, "Distance Covered/90 in KM", "distanceCoveredPer90"));
         list.add(addColumn(tableView, "Possession Lost/90", "possessionLostPer90"));
 
         return list;

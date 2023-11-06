@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+
+
+.combo-box {
+    background-color: "#6aa891";
+        -fx-background-color: "#6aa891";
+
+    border-color: rgb(96,153,132);
+        -fx-border-color: rgb(96,153,132);
+    border-width: 1px;
+
+
+}
+
+.combo-box .arrow-button {
+    background-color: "#6aa891";
+        -fx-background-color: "#6aa891";
+
+        -fx-text-fill: white;
+    
+}
+
+
+.combo-box .list-cell {
+    background-color: "#6aa891";
+        -fx-background-color: "#6aa891";
+
+        -fx-text-fill: white;
+}
+
+.combo-box .list-cell:hover {
+    background-color: "#78bfa4";
+        -fx-background-color: "#78bfa4"; /* Baggrundsfarve for indstilling ved hover */
+
+            -fx-text-fill: white; /* Tekstfarve for indstilling ved hover */
+}
+
+.combo-box .scroll-bar:vertical {
+
+    background-color: "#6aa891";
+        -fx-background-color: "#6aa891";
+
+    color: "#78bfa4";
+        -fx-color: "#78bfa4";
+
+}
