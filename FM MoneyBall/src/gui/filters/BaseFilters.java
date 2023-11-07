@@ -2,16 +2,14 @@ package gui.filters;
 
 import controller.CRUD_Controller;
 import javafx.geometry.Insets;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import model.Player;
 import model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class BaseFilters {
     private static List components = new ArrayList<>();
@@ -166,6 +164,19 @@ public class BaseFilters {
         cbbPlayerPositions.getItems().add("Any");
         for (Position p : Position.values()) {
             cbbPlayerPositions.getItems().add(p.toString());
+        }
+    }
+
+    private static void restrictInput() {
+        UnaryOperator<TextFormatter.Change> filter = change -> {
+            String text = change.getText();
+            if (text.matches("[0-9]*")) return change;
+            return null;
+        };
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setTextFormatter(new TextFormatter<>(filter));
+            }
         }
     }
 }

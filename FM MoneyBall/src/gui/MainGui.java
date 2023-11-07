@@ -2,7 +2,6 @@ package gui;
 
 import controller.CRUD_Controller;
 import controller.Controller;
-import gui.filters.ShotFilters;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -42,34 +41,46 @@ public class MainGui extends Application {
     }
 
     //__________________________________________________________________________________________________________________
-    private static TableView<Player> tvwPlayers = new TableView<>(); // Tabel med spillere og deres info
-    private static Label lblPlayerAmount = new Label();
-    private static Button btnLoadHTML = new Button("Load HTML-file");
-    private static MenuBar menuBar = new MenuBar();
-    private static Menu mFile = new Menu("File");
-    private static MenuItem miLoad = new MenuItem("Load HTML-file");
-    private static Accordion accordion = new Accordion();
+    private static TableView<Player> tvwPlayers = new TableView<>();        // Table with players and stats
+    private static Label lblPlayerAmount = new Label();                     // Amount of players in table
+    private static Button btnBigLoadHTML = new Button("Load HTML-file"); // Big button for initial loading of HTML
+    private static Button btnLoadHTML = new Button("Load HTML");         // Button for loading of HTML
 
-
-    private static List<TableColumn> baseStatsList = new ArrayList();
-    private static List<TableColumn> customStatsList = new ArrayList<>();
-    private static List<TableColumn> shotStatsList = new ArrayList();
-    private static List<TableColumn> passStatsList = new ArrayList();
-    private static List<TableColumn> crossStatslist = new ArrayList<>();
-    private static List<TableColumn> aerialStatslist = new ArrayList<>();
-    private static List<TableColumn> movementStatslist = new ArrayList<>();
-    private static List<TableColumn> tacklesStatslist = new ArrayList<>();
-    private static List<TableColumn> savesStatslist = new ArrayList<>();
 
     //__________________________________________________________________________________________________________________
 
     private Scene sceneMain() throws Exception {
-        BorderPane bpOuter = new BorderPane();
-        BorderPane borderPane = new BorderPane();
-        GridPane gridPane = new GridPane();
-        gridPane.getStyleClass().add("custom-gridpane");
+        // Call of other methods
+        createTableViewColumns();
+        tableViewModification();
+
+        // Creation
+        BorderPane borderPane = new BorderPane();   // Outer pane
+        GridPane gridPane = new GridPane();         // Pane used for table
+        Accordion accordion = new Accordion();      // Accordion used for filtering
+
+        // Setup
+        scene = new Scene(borderPane, 1600, 800);
+        lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
+
+        // Add to BorderPane
+        borderPane.setCenter(btnBigLoadHTML);
+
+        // Add to GridPane
+        gridPane.add(lblPlayerAmount, 0, 0);
+        gridPane.add(tvwPlayers, 0, 1, 8, 1);
+        gridPane.add(btnLoadHTML, 1, 0);
+
+
+        // Add to Accordion
+        accordion.getPanes().add(GuiFilters.createTitledPane(tvwPlayers, lblPlayerAmount));
+
+
+        // BorderPane Modification
         borderPane.getStyleClass().add("custom-gridpane");
-        bpOuter.getStyleClass().add("custom-gridpane");
+
+        // GridPane Modification
+        gridPane.getStyleClass().add("custom-gridpane");
         gridPane.setPrefHeight(800);
         gridPane.setPrefWidth(1600);
         gridPane.setGridLinesVisible(false);
@@ -77,64 +88,57 @@ public class MainGui extends Application {
         gridPane.setHgap(10);
         gridPane.setVgap(10);
 
-        scene = new Scene(bpOuter, gridPane.getPrefWidth(), gridPane.getPrefHeight());
+        // Accordion Modification
+        accordion.setExpandedPane(accordion.getPanes().get(0));
 
-        createTableViewColumns();
-        btnLoadHTML.getStyleClass().add("custom-button");
-        btnLoadHTML.setPrefSize(400, 200);
+
+        // Buttons methods
+        btnBigLoadHTML.getStyleClass().add("custom-button");
+        btnBigLoadHTML.setPrefSize(400, 200);
+
+        btnBigLoadHTML.setOnAction(event -> {
+            if (Controller.openFolder(stage)) {
+                GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
+                borderPane.setTop(accordion);
+                borderPane.setCenter(gridPane);
+            }
+        });
 
         btnLoadHTML.setOnAction(event -> {
-            Controller.openFolder(stage);
-            GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
-//            GuiFilters.resetFilters(tvwPlayers, lblPlayerAmount);
+            if (Controller.openFolder(stage)) {
+                GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
+            }
         });
-
-        miLoad.setOnAction(event -> {
-            Controller.openFolder(stage);
-            GuiFilters.resetAllFilters(tvwPlayers, lblPlayerAmount);
-//            GuiFilters.resetFilters(tvwPlayers, lblPlayerAmount);
-        });
-
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if (text.matches("[0-9]*")) return change;
-            return null;
-        };
-
-        //______________________________________________________________________________________________________________
-        // ADD TO PANE
-        gridPane.add(lblPlayerAmount, 0, 0);
-        gridPane.add(tvwPlayers, 0, 1, 8, 1);
-
-        //______________________________________________________________________________________________________________
-
-        tvwPlayers.getItems().setAll(CRUD_Controller.getAllPlayers());
-        lblPlayerAmount.setText("Players: " + tvwPlayers.getItems().size());
-        tvwPlayers.setPrefWidth(1560);
-        tvwPlayers.setPrefHeight(800);
-
-        tvwPlayers.setPlaceholder(btnLoadHTML);
-        tvwPlayers.skinProperty().addListener((obs, ol, ne) -> {
-            Pane header = (Pane) tvwPlayers.lookup("TableHeaderRow");
-            header.prefHeightProperty().bind(tvwPlayers.heightProperty().divide(10));
-        });
-
-        mFile.getItems().add(miLoad);
-        menuBar.getMenus().add(mFile);
-
-        //TODO ryd op i nedenstående
-        accordion.getPanes().add(GuiFilters.makeFilters(tvwPlayers, lblPlayerAmount));
-        accordion.setExpandedPane(accordion.getPanes().get(0));
-        bpOuter.setTop(menuBar);
-        bpOuter.setCenter(borderPane);
-
-        borderPane.setTop(accordion);
-        borderPane.setCenter(gridPane);
 
         return scene;
     }
 
-    public static void createTableViewColumns() {
+    private static void tableViewModification() {
+        tvwPlayers.getItems().setAll(CRUD_Controller.getAllPlayers());
+        tvwPlayers.setPrefWidth(1560);
+        tvwPlayers.setPrefHeight(800);
+        tvwPlayers.setPlaceholder(btnBigLoadHTML);
+
+        // Lambda-expression to change the height of the header in the table
+        tvwPlayers.skinProperty().addListener((obs, ol, ne) -> {
+            Pane header = (Pane) tvwPlayers.lookup("TableHeaderRow");
+            header.prefHeightProperty().bind(tvwPlayers.heightProperty().divide(10));
+        });
+    }
+
+
+
+    private static void createTableViewColumns() {
+        List<TableColumn> baseStatsList = new ArrayList();
+        List<TableColumn> customStatsList = new ArrayList<>();
+        List<TableColumn> shotStatsList = new ArrayList();
+        List<TableColumn> passStatsList = new ArrayList();
+        List<TableColumn> crossStatslist = new ArrayList<>();
+        List<TableColumn> aerialStatslist = new ArrayList<>();
+        List<TableColumn> movementStatslist = new ArrayList<>();
+        List<TableColumn> tacklesStatslist = new ArrayList<>();
+        List<TableColumn> savesStatslist = new ArrayList<>();
+
 
         baseStatsList = GuiTableView.addBaseStatsColumns(baseStatsList, tvwPlayers);
         customStatsList = GuiTableView.addCustomStatsColumns(customStatsList, tvwPlayers);
@@ -146,32 +150,47 @@ public class MainGui extends Application {
         tacklesStatslist = GuiTableView.addTacklesStatsColumns(tacklesStatslist, tvwPlayers);
         savesStatslist = GuiTableView.addSavesStatsColumns(savesStatslist, tvwPlayers);
 
+        for (TableColumn basestat : baseStatsList) {
+            basestat.setMinWidth(65);
+        }
+
         for (TableColumn shotColumn : shotStatsList) {
             applyCellStyleToColumn(shotColumn, "highlighted-cell-shots");
+            shotColumn.setPrefWidth(65);
+        }
+
+        for (TableColumn customColumn : customStatsList) {
+            customColumn.setPrefWidth(65);
         }
 
         for (TableColumn passColumn : passStatsList) {
             applyCellStyleToColumn(passColumn, "highlighted-cell-passes");
+            passColumn.setPrefWidth(65);
         }
 
-        for (TableColumn passColumn : crossStatslist) {
-            applyCellStyleToColumn(passColumn, "highlighted-cell-crosses");
+        for (TableColumn crossColumn : crossStatslist) {
+            applyCellStyleToColumn(crossColumn, "highlighted-cell-crosses");
+            crossColumn.setPrefWidth(65);
         }
 
-        for (TableColumn passColumn : aerialStatslist) {
-            applyCellStyleToColumn(passColumn, "highlighted-cell-aerial");
+        for (TableColumn aerialColumn : aerialStatslist) {
+            applyCellStyleToColumn(aerialColumn, "highlighted-cell-aerial");
+            aerialColumn.setPrefWidth(65);
         }
 
         for (TableColumn movementColumn : movementStatslist) {
             applyCellStyleToColumn(movementColumn, "highlighted-cell-movement");
+            movementColumn.setPrefWidth(65);
         }
 
-        for (TableColumn saveColumn : tacklesStatslist) {
-            applyCellStyleToColumn(saveColumn, "highlighted-cell-tackles");
+        for (TableColumn tackleColumn : tacklesStatslist) {
+            applyCellStyleToColumn(tackleColumn, "highlighted-cell-tackles");
+            tackleColumn.setPrefWidth(65);
         }
 
-        for (TableColumn tackleColumn : savesStatslist) {
-            applyCellStyleToColumn(tackleColumn, "highlighted-cell-saves");
+        for (TableColumn saveColumn : savesStatslist) {
+            applyCellStyleToColumn(saveColumn, "highlighted-cell-saves");
+            saveColumn.setPrefWidth(65);
         }
 
 
@@ -182,7 +201,7 @@ public class MainGui extends Application {
 
     }
 
-    public static void applyCellStyleToColumn(TableColumn<?, ?> column, String styleClass) {
+    private static void applyCellStyleToColumn(TableColumn<?, ?> column, String styleClass) {
         column.getStyleClass().add(styleClass);
     }
 }

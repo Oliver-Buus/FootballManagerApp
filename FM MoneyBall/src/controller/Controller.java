@@ -32,11 +32,11 @@ public class Controller {
         return player;
     }
 
-    public static void openFolder(Stage stage) {
+    public static boolean openFolder(Stage stage) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose a file");
 
-        File initialDirectory = new File(System.getProperty("user.home") + "\\Documents\\Sports Interactive");
+        File initialDirectory = new File(System.getProperty("user.home") + "\\Documents\\Sports Interactive\\Football Manager 2024");
 
         if (initialDirectory.exists()) fileChooser.setInitialDirectory(initialDirectory);
 
@@ -44,10 +44,11 @@ public class Controller {
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         if (!(selectedFile == null)) {
-        String filePath = selectedFile.getAbsolutePath();
-        System.out.println("Chosen path: " + filePath);
-        createPlayerFromHTML(filePath);
-        }
+            String filePath = selectedFile.getAbsolutePath();
+            System.out.println("Chosen path: " + filePath);
+            createPlayerFromHTML(filePath);
+            return true;
+        } else return false;
 
     }
 

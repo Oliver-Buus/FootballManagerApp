@@ -45,17 +45,17 @@ public class GuiTableView {
 
     public static List<TableColumn> addShotStatsColumns(List<TableColumn> list, TableView tableView) {
         list.add(addColumn(tableView, "Goals", "goals"));
-        list.add(addColumn(tableView, "Goals/90", "glsPer90"));
         list.add(addColumn(tableView, "Non-Penalty xG", "npxG"));
+        list.add(addColumn(tableView, "Goals/90", "glsPer90"));
         list.add(addColumn(tableView, "Non-Penalty xG/90", "npxGPer90"));
-        list.add(addColumn(tableView, "Minutes/Goal", "minsPerGoal"));
         list.add(addColumn(tableView, "Shots/90", "shotsPer90"));
-        list.add(addColumn(tableView, "Shots on Target %", "shotsOnTargetRatio"));
         list.add(addColumn(tableView, "Shots on Target/90", "shotsOnTargetPer90"));
-        list.add(addColumn(tableView, "Shots Outside Box/90", "shotsOutsideBoxPer90"));
-        list.add(addColumn(tableView, "Goals Outside Box", "goalsOutsideBox"));
+        list.add(addColumn(tableView, "Shots on Target %", "shotsOnTargetRatio"));
         list.add(addColumn(tableView, "xG/Shot", "xGPerShot"));
-        list.add(addColumn(tableView, "Conversion %", "conversionRatio"));
+        list.add(addColumn(tableView, "Minutes/Goal", "minsPerGoal"));
+//        list.add(addColumn(tableView, "Shots Outside Box/90", "shotsOutsideBoxPer90"));
+//        list.add(addColumn(tableView, "Goals Outside Box", "goalsOutsideBox"));
+//        list.add(addColumn(tableView, "Conversion %", "conversionRatio"));
 
         return list;
     }
