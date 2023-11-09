@@ -95,12 +95,8 @@ public class ShotFilters {
         if (!txfShotsPer90.getText().isEmpty())
             players = filterByShotsPer90(players);
 
-
-
         if (!txfShotsOnTargetPer90.getText().isEmpty())
             players = filterByShotsOnTargetPer90(players);
-
-
 
         if (!txfXGPerShot.getText().isEmpty())
             players = filterByXGPerShot(players);

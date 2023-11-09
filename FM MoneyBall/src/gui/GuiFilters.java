@@ -37,33 +37,39 @@ public class GuiFilters {
         Accordion accordionShooting = new Accordion();
         TitledPane tpShooting = new TitledPane("Shooting stats", ShotFilters.addToGridPane());
         accordionShooting.getPanes().add(tpShooting);
-        gridPane.add(accordionShooting, 2, 0, 1, 10);
+        accordionShooting.setExpandedPane(accordionShooting.getPanes().get(0));
+        gridPane.add(accordionShooting, 2, 0, 1, 15);
 
         Accordion accordionPassing = new Accordion();
         TitledPane tpPassing = new TitledPane("Passing/Crossing stats", PassAndCrossFilters.addToGridPane());
         accordionPassing.getPanes().add(tpPassing);
-        gridPane.add(accordionPassing, 3, 0, 1, 10);
+        accordionPassing.setExpandedPane(accordionPassing.getPanes().get(0));
+        gridPane.add(accordionPassing, 3, 0, 1, 15);
 
 
         Accordion accordionAerial = new Accordion();
         TitledPane tpAerial = new TitledPane("Aerial stats", AerialFilters.addToGridPane());
         accordionAerial.getPanes().add(tpAerial);
-        gridPane.add(accordionAerial, 4, 0, 1, 10);
+        accordionAerial.setExpandedPane(accordionAerial.getPanes().get(0));
+        gridPane.add(accordionAerial, 4, 0, 1, 15);
 
         Accordion accordionMovement = new Accordion();
         TitledPane tpMovement = new TitledPane("Movement stats", MovementFilters.addToGridPane());
         accordionMovement.getPanes().add(tpMovement);
-        gridPane.add(accordionMovement, 5, 0, 1, 10);
+        accordionMovement.setExpandedPane(accordionMovement.getPanes().get(0));
+        gridPane.add(accordionMovement, 5, 0, 1, 15);
 
         Accordion accordionTackle = new Accordion();
         TitledPane tpTackle = new TitledPane("Tackling stats", TackleFilters.addToGridPane());
         accordionTackle.getPanes().add(tpTackle);
-        gridPane.add(accordionTackle, 6, 0, 1, 10);
+        accordionTackle.setExpandedPane(accordionTackle.getPanes().get(0));
+        gridPane.add(accordionTackle, 6, 0, 1, 15);
 
         Accordion accordionSave = new Accordion();
         TitledPane tpSave = new TitledPane("Saves stats", SavesFilter.addToGridPane());
         accordionSave.getPanes().add(tpSave);
-        gridPane.add(accordionSave, 7, 0, 1, 10);
+        accordionSave.setExpandedPane(accordionSave.getPanes().get(0));
+        gridPane.add(accordionSave, 7, 0, 1, 15);
 
         gridPane.getStyleClass().add("custom-gridpane");
 
@@ -80,6 +86,11 @@ public class GuiFilters {
 
         currentPlayersList = BaseFilters.applyFilters(currentPlayersList);
         currentPlayersList = ShotFilters.applyFilters(currentPlayersList);
+        currentPlayersList = PassAndCrossFilters.applyFilters(currentPlayersList);
+        currentPlayersList = AerialFilters.applyFilters(currentPlayersList);
+        currentPlayersList = MovementFilters.applyFilters(currentPlayersList);
+        currentPlayersList = TackleFilters.applyFilters(currentPlayersList);
+        currentPlayersList = SavesFilter.applyFilters(currentPlayersList);
 
         tableView.getItems().setAll(currentPlayersList);
         playerAmount.setText("Players: " + tableView.getItems().size());
@@ -90,6 +101,13 @@ public class GuiFilters {
         tableView.getItems().setAll(CRUD_Controller.getAllPlayers());
         BaseFilters.resetFilters();
         ShotFilters.resetFilters();
+        PassAndCrossFilters.resetFilters();
+        AerialFilters.resetFilters();
+        MovementFilters.resetFilters();
+        TackleFilters.resetFilters();
+        TackleFilters.resetFilters();
+        SavesFilter.resetFilters();
+
         playerAmount.setText("Players: " + tableView.getItems().size());
 
     }

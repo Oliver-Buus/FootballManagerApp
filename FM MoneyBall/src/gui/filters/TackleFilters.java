@@ -8,6 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,118 @@ public class TackleFilters {
         components.add(txfInterceptionsPer90);
         components.add(txfClearancesPer90);
         components.add(txfBlocksPer90);
+    }
+
+    public static List<Player> applyFilters(List<Player> players) {
+
+        if (!txfTacklesWonPer90.getText().isEmpty())
+            players = filterByTacklesWonPer90(players);
+
+        if (!txfShotsBlockedPer90.getText().isEmpty())
+            players = filterByShotsBlockedPer90(players);
+
+        if (!txfPossessionWonPer90.getText().isEmpty())
+            players = filterByPossessionWonPer90(players);
+
+        if (!txfKeyTacklesPer90.getText().isEmpty())
+            players = filterKeyTacklesPer90(players);
+
+        if (!txfInterceptionsPer90.getText().isEmpty())
+            players = filterByInterceptionsPer90(players);
+
+        if (!txfClearancesPer90.getText().isEmpty())
+            players = filterByClearancesPer90(players);
+
+        if (!txfBlocksPer90.getText().isEmpty())
+            players = filterByBlocksPer90(players);
+
+        return players;
+    }
+
+    public static void resetFilters() {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText("");
+            }
+        }
+
+    }
+
+    private static List<Player> filterByTacklesWonPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getTacklesWonPer90() >=
+                    Double.parseDouble(txfTacklesWonPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByShotsBlockedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getShotsBlockedPer90() >=
+                    Double.parseDouble(txfShotsBlockedPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByPossessionWonPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getPossessionWonPer90() >=
+                    Double.parseDouble(txfPossessionWonPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterKeyTacklesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getKeyTacklesPer90() >=
+                    Double.parseDouble(txfKeyTacklesPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByInterceptionsPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getInterceptionsPer90() >=
+                    Double.parseDouble(txfInterceptionsPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByClearancesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getClearancesPer90() >=
+                    Double.parseDouble(txfClearancesPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByBlocksPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getBlocksPer90() >=
+                    Double.parseDouble(txfBlocksPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
     }
 
     private static void addTooltips() {

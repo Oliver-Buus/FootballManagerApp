@@ -8,6 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +126,132 @@ public class PassAndCrossFilters {
 
 
     }
+
+    public static List<Player> applyFilters(List<Player> players) {
+        if (!txfAssistsPer90.getText().isEmpty())
+            players = filterByAssistsPer90(players);
+
+        if (!txfXAssistsPer90.getText().isEmpty())
+            players = filterByXAssistsPer90(players);
+
+        if (!txfProgressivePassesPer90.getText().isEmpty())
+            players = filterByProgressivePassesPer90(players);
+
+        if (!txfPassesCompletedPer90.getText().isEmpty())
+            players = filterByPassesCompletedPer90(players);
+
+        if (!txfOPKeyPassesPer90.getText().isEmpty())
+            players = filterByOpenPlayKeyPassesPer90(players);
+
+        if (!txfKeyPassesPer90.getText().isEmpty())
+            players = filterByKeyPassesPer90(players);
+
+        if (!txfChancesCreatedPer90.getText().isEmpty())
+            players = filterByChancesCreatedPer90(players);
+
+        if (!txfOPCrossesCompletedPer90.getText().isEmpty())
+            players = filterByOpenPlayCrossesCompletedPer90(players);
+
+        return players;
+    }
+
+    public static void resetFilters() {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText("");
+            }
+        }
+    }
+
+    private static List<Player> filterByAssistsPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getAssistsPer90() >= Double.parseDouble(txfAssistsPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByXAssistsPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getXAPer90() >= Double.parseDouble(txfXAssistsPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByProgressivePassesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getPrPassesPer90() >= Double.parseDouble(txfProgressivePassesPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByPassesCompletedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getPassesCompletedPer90() >= Double.parseDouble(txfPassesCompletedPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByOpenPlayKeyPassesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getOpenPlayKeyPassesPer90() >= Double.parseDouble(txfOPKeyPassesPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByKeyPassesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getKeyPassesPer90() >= Double.parseDouble(txfKeyPassesPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByChancesCreatedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getChancesCreatedPer90() >= Double.parseDouble(txfChancesCreatedPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByOpenPlayCrossesCompletedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getOpenPlayCrossesCompletedPer90() >= Double.parseDouble(txfOPCrossesCompletedPer90.getText()))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+
 
     private static void restrictInput() {
         UnaryOperator<TextFormatter.Change> filter = change -> {

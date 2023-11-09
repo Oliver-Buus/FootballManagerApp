@@ -8,6 +8,8 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Player;
+import model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ public class MovementFilters {
     private static Label lblHighIntensitySprintsPer90 = new Label("Sprints/90");
     private static Label lblDribblesPer90 = new Label("Dribbles/90");
     private static Label lblDistanceCoveredPer90 = new Label("Dist/90");
-    private static Label lblPossessionLostPer90 = new Label("Poss. Lost/90");
+    private static Label lblPossessionLostPer90 = new Label("Poss. Lost/90 (max)");
     private static TextField txfPressuresCompletedPer90 = new TextField();
     private static TextField txfPressuresAttemptedPer90 = new TextField();
     private static TextField txfHighIntensitySprintsPer90 = new TextField();
@@ -81,6 +83,98 @@ public class MovementFilters {
         components.add(txfDribblesPer90);
         components.add(txfDistanceCoveredPer90);
         components.add(txfPossessionLostPer90);
+    }
+
+    public static List<Player> applyFilters(List<Player> players) {
+
+        if (!txfPressuresCompletedPer90.getText().isEmpty())
+            players = filterByPressuresCompletedPer90(players);
+
+        if (!txfPressuresAttemptedPer90.getText().isEmpty())
+            players = filterByPressuresAttemptedPer90(players);
+
+        if (!txfHighIntensitySprintsPer90.getText().isEmpty())
+            players = filterBySprintsPer90(players);
+
+        if (!txfDribblesPer90.getText().isEmpty())
+            players = filterByDribblesPer90(players);
+
+        if (!txfDistanceCoveredPer90.getText().isEmpty())
+            players = filterByDistanceCoveredPer90(players);
+
+        if (!txfPossessionLostPer90.getText().isEmpty())
+            players = filterByPossessionLostPer90(players);
+
+        return players;
+    }
+
+    public static void resetFilters() {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText("");
+            }
+        }
+
+    }
+
+    private static List<Player> filterByPressuresCompletedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getPressuresCompletedPer90() >= Double.parseDouble(txfPressuresCompletedPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByPressuresAttemptedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getPressuresAttemptedPer90() >= Double.parseDouble(txfPressuresAttemptedPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterBySprintsPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getSprintsPer90() >= Double.parseDouble(txfHighIntensitySprintsPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByDribblesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getDribblesPer90() >= Double.parseDouble(txfDribblesPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByDistanceCoveredPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getDistanceCoveredPer90() >= Double.parseDouble(txfDistanceCoveredPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByPossessionLostPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getPossessionLostPer90() <= Double.parseDouble(txfPossessionLostPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
     }
 
     private static void addTooltips() {

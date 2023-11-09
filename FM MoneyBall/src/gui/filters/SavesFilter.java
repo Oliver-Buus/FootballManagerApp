@@ -8,6 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.function.UnaryOperator;
 public class SavesFilter {
     private static List components = new ArrayList<>();
     private static Label lblSavesPer90 = new Label("Saves/90");
-    private static Label lblConcededPer90 = new Label("Conceded/90");
+    private static Label lblConcededPer90 = new Label("Conceded/90 (max)");
     private static Label lblCleanSheetsPer90 = new Label("Clean Sheets/90");
     private static Label lblSaveRatio = new Label("Save%");
     private static Label lblXSaveRatio = new Label("Expected Save%");
@@ -81,6 +82,109 @@ public class SavesFilter {
         components.add(txfXGoalsPreventedper90);
     }
 
+    public static List<Player> applyFilters(List<Player> players) {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText(((TextField)
+                        textField).getText().replace(",", "."));
+            }
+        }
+
+        if (!txfSavesPer90.getText().isEmpty())
+            players = filterBySavesPer90(players);
+
+        if (!txfConcededPer90.getText().isEmpty())
+            players = filterByConcededPer90(players);
+
+        if (!txfCleanSheetsPer90.getText().isEmpty())
+            players = filterByCleanSheetsPer90(players);
+
+        if (!txfSaveRatio.getText().isEmpty())
+            players = filterBySaveRatioPer90(players);
+
+        if (!txfXSaveRatio.getText().isEmpty())
+            players = filterByXSaveRatioPer90(players);
+
+        if (!txfXGoalsPreventedper90.getText().isEmpty())
+            players = filterByXGoalsPreventedPer90(players);
+
+        return players;
+    }
+
+    public static void resetFilters() {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText("");
+            }
+        }
+
+    }
+
+    private static List<Player> filterBySavesPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getSavesPer90() >=
+                    Double.parseDouble(txfSavesPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+    private static List<Player> filterByConcededPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getConcededPer90() <=
+                    Double.parseDouble(txfConcededPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByCleanSheetsPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getCleanSheetsPer90() >=
+                    Double.parseDouble(txfCleanSheetsPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterBySaveRatioPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getSaveRatio() >=
+                    Double.parseDouble(txfSaveRatio.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByXSaveRatioPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getXsaveRatio() >=
+                    Double.parseDouble(txfXSaveRatio.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByXGoalsPreventedPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+        for (Player player : players) {
+            if ((player.getXGoalsPreventedPer90() >=
+                    Double.parseDouble(txfXGoalsPreventedper90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
     private static void addTooltips() {
         Tooltip ttSavesPer90 = new Tooltip("Pressures completed per 90 minutes");
         txfSavesPer90.setTooltip(ttSavesPer90);
@@ -110,7 +214,7 @@ public class SavesFilter {
     private static void restrictInput() {
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String text = change.getText();
-            if (text.matches("^[0-9\\.-]*$")) return change;
+            if (text.matches("^[0-9\\,.-]*$")) return change;
             return null;
         };
         for (Object textField : components) {

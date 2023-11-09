@@ -8,6 +8,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 import javafx.util.Duration;
+import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,48 @@ public class AerialFilters {
 
         components.add(txfKeyHeadersWonPer90);
         components.add(txfHeadersWonPer90);
+    }
+
+    public static List<Player> applyFilters(List<Player> players) {
+
+        if (!txfKeyHeadersWonPer90.getText().isEmpty())
+            players = filterByKeyHeadersWonPer90(players);
+
+        if (!txfHeadersWonPer90.getText().isEmpty())
+            players = filterByHeadersWonPer90(players);
+
+        return players;
+    }
+
+    public static void resetFilters() {
+        for (Object textField : components) {
+            if (textField instanceof TextField) {
+                ((TextField) textField).setText("");
+            }
+        }
+
+    }
+
+    private static List<Player> filterByKeyHeadersWonPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if ((player.getKeyHeadersPer90() >= Double.parseDouble(txfKeyHeadersWonPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
+    }
+
+    private static List<Player> filterByHeadersWonPer90(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if ((player.getHeadersWonPer90() >= Double.parseDouble(txfHeadersWonPer90.getText())))
+                filteredData.add(player);
+        }
+
+        return filteredData;
     }
 
     private static void addTooltips() {

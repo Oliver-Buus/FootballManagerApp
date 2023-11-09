@@ -17,6 +17,7 @@ public class BaseFilters {
     private static Label lblAge = new Label("Age");
     private static Label lblHeight = new Label("Height");
     private static Label lblMinutes = new Label("Min. Minutes");
+    private static Label lblNationality = new Label("Nationality"); //
 
     private static ComboBox<String> cbbPlayerPositions = new ComboBox<>();
     private static TextField txfAgeMin = new TextField();
