@@ -1,21 +1,16 @@
 package gui.filters;
 
-import javafx.geometry.HPos;
-import javafx.scene.Node;
+import gui.GuiFilters;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.util.Duration;
 import model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 public class PassAndCrossFilters {
-    private static List components = new ArrayList<>();
+    private static List<Object> components = new ArrayList<>();
     private static Label lblAssistsPer90 = new Label("Assists/90");
     private static Label lblXAssistsPer90 = new Label("xAssists/90");
     private static Label lblProgressivePassesPer90 = new Label("Pr. Passes/90");
@@ -34,235 +29,64 @@ public class PassAndCrossFilters {
     private static TextField txfOPCrossesCompletedPer90 = new TextField();
 
     public static GridPane addToGridPane() {
-        GridPane gridPane = new GridPane();
-        addAllComponentsToList();
-//        modifyComponents();
-        restrictInput();
+        components.addAll(GuiFilters.getStaticFields(PassAndCrossFilters.class));
+        GuiFilters.restrictInput(components);
         addTooltips();
 
-        gridPane.getStyleClass().add("custom-gridpane");
-        gridPane.setVgap(5);
-        gridPane.setHgap(5);
-
-        int i = 1;
-        for (Object label : components) {
-            if (label instanceof Label) {
-                ((Label) label).setPrefWidth(120);
-                gridPane.add((Node) label, 0, i);
-                i++;
-            }
-        }
-
-        i = 1;
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setPrefWidth(50);
-                ((TextField) textField).setMaxWidth(50);
-                ((TextField) textField).setStyle("-fx-alignment: CENTER;");
-                gridPane.add((Node) textField, 1, i);
-                i++;
-            }
-        }
-        Label lblMin = new Label("Min.");
-        GridPane.setHalignment(lblMin, HPos.CENTER);
-        gridPane.add(lblMin, 1, 0);
-
-        return gridPane;
-    }
-
-    private static void addTooltips() {
-        Tooltip ttAssistsPer90 = new Tooltip("Assists per 90 minutes");
-        txfAssistsPer90.setTooltip(ttAssistsPer90);
-        ttAssistsPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttXAssistsPer90 = new Tooltip("Expected assists per 90 minutes");
-        txfXAssistsPer90.setTooltip(ttXAssistsPer90);
-        ttXAssistsPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttPrPassesPer90 = new Tooltip("Progressive passes per 90 minutes");
-        txfProgressivePassesPer90.setTooltip(ttPrPassesPer90);
-        ttPrPassesPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttPassesCompletedPer90 = new Tooltip("Passes completed per 90 minutes");
-        txfPassesCompletedPer90.setTooltip(ttPassesCompletedPer90);
-        ttPassesCompletedPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttOPKeyPassesPer90 = new Tooltip("Open Play Key Passes per 90 minutes");
-        txfOPKeyPassesPer90.setTooltip(ttOPKeyPassesPer90);
-        ttOPKeyPassesPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttKeyPassesPer90 = new Tooltip("Key Passes per 90 minutes");
-        txfKeyPassesPer90.setTooltip(ttKeyPassesPer90);
-        ttKeyPassesPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttChancesCreatedPer90 = new Tooltip("Chances Created per 90 minutes");
-        txfChancesCreatedPer90.setTooltip(ttChancesCreatedPer90);
-        ttChancesCreatedPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttOPCrossesCompletedPer90 = new Tooltip("Open Play Crosses Completed per 90 minutes");
-        txfOPCrossesCompletedPer90.setTooltip(ttOPCrossesCompletedPer90);
-        ttOPCrossesCompletedPer90.setShowDelay(Duration.millis(150));
+        return GuiFilters.modifyGridPane(components);
     }
 
 
-    private static void addAllComponentsToList() {
-        components.add(lblAssistsPer90);
-        components.add(lblXAssistsPer90);
-        components.add(lblProgressivePassesPer90);
-        components.add(lblPassesCompletedPer90);
-        components.add(lblOPKeyPassesPer90);
-        components.add(lblKeyPassesPer90);
-        components.add(lblChancesCreatedPer90);
-        components.add(lblOPCrossesCompletedPer90);
+    public static List<Player> createFilters(List<Player> players) {
+        GuiFilters.commaToDot(components);
 
-        components.add(txfAssistsPer90);
-        components.add(txfXAssistsPer90);
-        components.add(txfProgressivePassesPer90);
-        components.add(txfPassesCompletedPer90);
-        components.add(txfOPKeyPassesPer90);
-        components.add(txfKeyPassesPer90);
-        components.add(txfChancesCreatedPer90);
-        components.add(txfOPCrossesCompletedPer90);
-
-
-    }
-
-    public static List<Player> applyFilters(List<Player> players) {
         if (!txfAssistsPer90.getText().isEmpty())
-            players = filterByAssistsPer90(players);
+            players = GuiFilters.filterByAttribute(players, "assistsPer90", ">=",
+                    Double.parseDouble(txfAssistsPer90.getText()));
 
         if (!txfXAssistsPer90.getText().isEmpty())
-            players = filterByXAssistsPer90(players);
+            players = GuiFilters.filterByAttribute(players, "xAPer90", ">=",
+                    Double.parseDouble(txfXAssistsPer90.getText()));
 
         if (!txfProgressivePassesPer90.getText().isEmpty())
-            players = filterByProgressivePassesPer90(players);
+            players = GuiFilters.filterByAttribute(players, "prPassesPer90", ">=",
+                    Double.parseDouble(txfProgressivePassesPer90.getText()));
 
         if (!txfPassesCompletedPer90.getText().isEmpty())
-            players = filterByPassesCompletedPer90(players);
+            players = GuiFilters.filterByAttribute(players, "passesCompletedPer90", ">=",
+                    Double.parseDouble(txfPassesCompletedPer90.getText()));
 
         if (!txfOPKeyPassesPer90.getText().isEmpty())
-            players = filterByOpenPlayKeyPassesPer90(players);
+            players = GuiFilters.filterByAttribute(players, "openPlayKeyPassesPer90", ">=",
+                    Double.parseDouble(txfOPKeyPassesPer90.getText()));
 
         if (!txfKeyPassesPer90.getText().isEmpty())
-            players = filterByKeyPassesPer90(players);
+            players = GuiFilters.filterByAttribute(players, "keyPassesPer90", ">=",
+                    Double.parseDouble(txfKeyPassesPer90.getText()));
 
         if (!txfChancesCreatedPer90.getText().isEmpty())
-            players = filterByChancesCreatedPer90(players);
+            players = GuiFilters.filterByAttribute(players, "chancesCreatedPer90", ">=",
+                    Double.parseDouble(txfChancesCreatedPer90.getText()));
 
         if (!txfOPCrossesCompletedPer90.getText().isEmpty())
-            players = filterByOpenPlayCrossesCompletedPer90(players);
+            players = GuiFilters.filterByAttribute(players, "openPlayCrossesCompletedPer90", ">=",
+                    Double.parseDouble(txfOPCrossesCompletedPer90.getText()));
 
         return players;
     }
 
-    public static void resetFilters() {
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setText("");
-            }
-        }
+    private static void addTooltips() {
+        GuiFilters.addTooltips("Assists per 90 minutes", txfAssistsPer90);
+        GuiFilters.addTooltips("Expected assists per 90 minutes", txfXAssistsPer90);
+        GuiFilters.addTooltips("Progressive passes per 90 minutes", txfProgressivePassesPer90);
+        GuiFilters.addTooltips("Passes completed per 90 minutes", txfPassesCompletedPer90);
+        GuiFilters.addTooltips("Open play key passes per 90 minutes", txfOPKeyPassesPer90);
+        GuiFilters.addTooltips("Key Passes per 90 minutes", txfKeyPassesPer90);
+        GuiFilters.addTooltips("Chances created per 90 minutes", txfChancesCreatedPer90);
+        GuiFilters.addTooltips("Open play crosses completed per 90 minutes", txfOPCrossesCompletedPer90);
     }
 
-    private static List<Player> filterByAssistsPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getAssistsPer90() >= Double.parseDouble(txfAssistsPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByXAssistsPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getXAPer90() >= Double.parseDouble(txfXAssistsPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByProgressivePassesPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getPrPassesPer90() >= Double.parseDouble(txfProgressivePassesPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByPassesCompletedPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getPassesCompletedPer90() >= Double.parseDouble(txfPassesCompletedPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByOpenPlayKeyPassesPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getOpenPlayKeyPassesPer90() >= Double.parseDouble(txfOPKeyPassesPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByKeyPassesPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getKeyPassesPer90() >= Double.parseDouble(txfKeyPassesPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByChancesCreatedPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getChancesCreatedPer90() >= Double.parseDouble(txfChancesCreatedPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByOpenPlayCrossesCompletedPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-
-        for (Player player : players) {
-            if (player.getOpenPlayCrossesCompletedPer90() >= Double.parseDouble(txfOPCrossesCompletedPer90.getText()))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-
-
-    private static void restrictInput() {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if (text.matches("[0-9]*\\.?[0-9]*")) return change;
-            return null;
-        };
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setTextFormatter(new TextFormatter<>(filter));
-            }
-        }
+    public static List<Object> getComponents() {
+        return components;
     }
 }

@@ -8,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -19,7 +17,7 @@ import model.Player;
 
 import java.util.*;
 import java.util.List;
-import java.util.function.UnaryOperator;
+
 
 public class MainGui extends Application {
     private Stage stage;
@@ -129,10 +127,10 @@ public class MainGui extends Application {
 
 
     private static void createTableViewColumns() {
-        List<TableColumn> baseStatsList = new ArrayList();
+        List<TableColumn> baseStatsList = new ArrayList<>();
         List<TableColumn> customStatsList = new ArrayList<>();
-        List<TableColumn> shotStatsList = new ArrayList();
-        List<TableColumn> passStatsList = new ArrayList();
+        List<TableColumn> shotStatsList = new ArrayList<>();
+        List<TableColumn> passStatsList = new ArrayList<>();
         List<TableColumn> crossStatslist = new ArrayList<>();
         List<TableColumn> aerialStatslist = new ArrayList<>();
         List<TableColumn> movementStatslist = new ArrayList<>();
@@ -192,13 +190,6 @@ public class MainGui extends Application {
             applyCellStyleToColumn(saveColumn, "highlighted-cell-saves");
             saveColumn.setPrefWidth(65);
         }
-
-
-//        for (TableColumn tableColumn : tvwPlayers.getColumns()) {
-//            tableColumn.setPrefWidth(tableColumn.getWidth() + 3);
-//        }
-//        tvwPlayers.setPrefHeight(480);
-
     }
 
     private static void applyCellStyleToColumn(TableColumn<?, ?> column, String styleClass) {

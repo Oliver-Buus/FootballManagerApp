@@ -53,9 +53,7 @@ public class GuiTableView {
         list.add(addColumn(tableView, "Shots on Target %", "shotsOnTargetRatio"));
         list.add(addColumn(tableView, "xG/Shot", "xGPerShot"));
         list.add(addColumn(tableView, "Minutes/Goal", "minsPerGoal"));
-//        list.add(addColumn(tableView, "Shots Outside Box/90", "shotsOutsideBoxPer90"));
-//        list.add(addColumn(tableView, "Goals Outside Box", "goalsOutsideBox"));
-//        list.add(addColumn(tableView, "Conversion %", "conversionRatio"));
+
 
         return list;
     }

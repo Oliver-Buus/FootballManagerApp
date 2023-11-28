@@ -1,19 +1,13 @@
 package gui.filters;
 
-import javafx.geometry.HPos;
-import javafx.scene.Node;
+import gui.GuiFilters;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import javafx.util.Duration;
 import model.Player;
-import model.Position;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 public class MovementFilters {
     private static List components = new ArrayList<>();
@@ -33,186 +27,54 @@ public class MovementFilters {
 
 
     public static GridPane addToGridPane() {
-        GridPane gridPane = new GridPane();
-        addAllComponentsToList();
+        components.addAll(GuiFilters.getStaticFields(MovementFilters.class));
+        GuiFilters.restrictInput(components);
         addTooltips();
-        restrictInput();
 
-        gridPane.getStyleClass().add("custom-gridpane");
-        gridPane.setVgap(5);
-        gridPane.setHgap(5);
-
-        Label lblMin = new Label("Min.");
-        GridPane.setHalignment(lblMin, HPos.CENTER);
-        gridPane.add(lblMin, 1, 0);
-
-        int i = 1;
-        for (Object label : components) {
-            if (label instanceof Label) {
-                ((Label) label).setPrefWidth(120);
-                gridPane.add((Node) label, 0, i);
-                i++;
-            }
-        }
-
-        i = 1;
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setPrefWidth(50);
-                ((TextField) textField).setMaxWidth(50);
-                ((TextField) textField).setStyle("-fx-alignment: CENTER;");
-                gridPane.add((Node) textField, 1, i);
-                i++;
-            }
-        }
-
-        return gridPane;
+        return GuiFilters.modifyGridPane(components);
     }
 
-    private static void addAllComponentsToList() {
-        components.add(lblPressuresCompletedPer90);
-        components.add(lblPressuresAttemptedPer90);
-        components.add(lblHighIntensitySprintsPer90);
-        components.add(lblDribblesPer90);
-        components.add(lblDistanceCoveredPer90);
-        components.add(lblPossessionLostPer90);
-
-        components.add(txfPressuresCompletedPer90);
-        components.add(txfPressuresAttemptedPer90);
-        components.add(txfHighIntensitySprintsPer90);
-        components.add(txfDribblesPer90);
-        components.add(txfDistanceCoveredPer90);
-        components.add(txfPossessionLostPer90);
-    }
-
-    public static List<Player> applyFilters(List<Player> players) {
+    public static List<Player> createFilters(List<Player> players) {
+        GuiFilters.commaToDot(components);
 
         if (!txfPressuresCompletedPer90.getText().isEmpty())
-            players = filterByPressuresCompletedPer90(players);
+            players = GuiFilters.filterByAttribute(players, "pressuresCompletedPer90", ">=",
+                    Double.parseDouble(txfPressuresCompletedPer90.getText()));
 
         if (!txfPressuresAttemptedPer90.getText().isEmpty())
-            players = filterByPressuresAttemptedPer90(players);
+            players = GuiFilters.filterByAttribute(players, "pressuresAttemptedPer90", ">=",
+                    Double.parseDouble(txfPressuresAttemptedPer90.getText()));
 
         if (!txfHighIntensitySprintsPer90.getText().isEmpty())
-            players = filterBySprintsPer90(players);
+            players = GuiFilters.filterByAttribute(players, "sprintsPer90", ">=",
+                    Double.parseDouble(txfHighIntensitySprintsPer90.getText()));
 
         if (!txfDribblesPer90.getText().isEmpty())
-            players = filterByDribblesPer90(players);
+            players = GuiFilters.filterByAttribute(players, "dribblesPer90", ">=",
+                    Double.parseDouble(txfDribblesPer90.getText()));
 
         if (!txfDistanceCoveredPer90.getText().isEmpty())
-            players = filterByDistanceCoveredPer90(players);
+            players = GuiFilters.filterByAttribute(players, "distanceCoveredPer90", ">=",
+                    Double.parseDouble(txfDistanceCoveredPer90.getText()));
 
         if (!txfPossessionLostPer90.getText().isEmpty())
-            players = filterByPossessionLostPer90(players);
+            players = GuiFilters.filterByAttribute(players, "possessionLostPer90", "<=",
+                    Double.parseDouble(txfPossessionLostPer90.getText()));
 
         return players;
     }
 
-    public static void resetFilters() {
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setText("");
-            }
-        }
-
-    }
-
-    private static List<Player> filterByPressuresCompletedPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getPressuresCompletedPer90() >= Double.parseDouble(txfPressuresCompletedPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByPressuresAttemptedPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getPressuresAttemptedPer90() >= Double.parseDouble(txfPressuresAttemptedPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterBySprintsPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getSprintsPer90() >= Double.parseDouble(txfHighIntensitySprintsPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByDribblesPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getDribblesPer90() >= Double.parseDouble(txfDribblesPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByDistanceCoveredPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getDistanceCoveredPer90() >= Double.parseDouble(txfDistanceCoveredPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByPossessionLostPer90(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getPossessionLostPer90() <= Double.parseDouble(txfPossessionLostPer90.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
 
     private static void addTooltips() {
-        Tooltip ttPressuresCompletedPer90 = new Tooltip("Pressures completed per 90 minutes");
-        txfPressuresCompletedPer90.setTooltip(ttPressuresCompletedPer90);
-        ttPressuresCompletedPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttPressuresAttemptedPer90  = new Tooltip("Pressures attempted per 90 minutes");
-        txfPressuresAttemptedPer90.setTooltip(ttPressuresAttemptedPer90);
-        ttPressuresAttemptedPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttHighIntensitySprintsPer90  = new Tooltip("High intensity sprints per 90 minutes");
-        txfHighIntensitySprintsPer90.setTooltip(ttHighIntensitySprintsPer90);
-        ttHighIntensitySprintsPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttDribblesPer90  = new Tooltip("Dribbles made per 90 minutes");
-        txfDribblesPer90.setTooltip(ttDribblesPer90);
-        ttDribblesPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttDistanceCoveredPer90  = new Tooltip("Distance covered per 90 minutes");
-        txfDistanceCoveredPer90.setTooltip(ttDistanceCoveredPer90);
-        ttDistanceCoveredPer90.setShowDelay(Duration.millis(150));
-
-        Tooltip ttPossessionLostPer90  = new Tooltip("Possession lost per 90 minutes");
-        txfPossessionLostPer90.setTooltip(ttPossessionLostPer90);
-        ttPossessionLostPer90.setShowDelay(Duration.millis(150));
+        GuiFilters.addTooltips("Pressures completed per 90 minutes", txfPressuresCompletedPer90);
+        GuiFilters.addTooltips("Pressures attempted per 90 minutes", txfPressuresAttemptedPer90);
+        GuiFilters.addTooltips("High intensity sprints per 90 minutes", txfHighIntensitySprintsPer90);
+        GuiFilters.addTooltips("Dribbles made per 90 minutes", txfDribblesPer90);
+        GuiFilters.addTooltips("Distance covered per 90 minutes", txfDistanceCoveredPer90);
+        GuiFilters.addTooltips("Possession lost per 90 minutes", txfPossessionLostPer90);
     }
 
-    private static void restrictInput() {
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String text = change.getText();
-            if (text.matches("[0-9]*\\.?[0-9]*")) return change;
-            return null;
-        };
-        for (Object textField : components) {
-            if (textField instanceof TextField) {
-                ((TextField) textField).setTextFormatter(new TextFormatter<>(filter));
-            }
-        }
+    public static List getComponents() {
+        return components;
     }
 }

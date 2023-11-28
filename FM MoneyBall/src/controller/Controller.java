@@ -8,6 +8,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -40,8 +42,8 @@ public class Controller {
 
         if (initialDirectory.exists()) fileChooser.setInitialDirectory(initialDirectory);
 
-
         File selectedFile = fileChooser.showOpenDialog(stage);
+
 
         if (!(selectedFile == null)) {
             String filePath = selectedFile.getAbsolutePath();

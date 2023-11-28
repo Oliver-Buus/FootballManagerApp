@@ -1,109 +1,182 @@
 package gui.filters;
 
 import controller.CRUD_Controller;
+import gui.AutoCompleteComboboxListener;
+import gui.GuiFilters;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import model.Player;
 import model.Position;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
+
 public class BaseFilters {
-    private static List components = new ArrayList<>();
+    private static Map<String, String> map = FilterUtil.readNationalitiesFile();
+    private static List<Object> components = new ArrayList<>();
+    private static Label lblNationality = new Label("Nationality");
+    private static Label lblDivision = new Label("Division");
+    private static Label lblClub = new Label("Club");
     private static Label lblPosition = new Label("Position");
     private static Label lblAge = new Label("Age");
     private static Label lblHeight = new Label("Height");
     private static Label lblMinutes = new Label("Min. Minutes");
-    private static Label lblNationality = new Label("Nationality"); //
+    private static Label lblAvgRating = new Label("Min. Avg rating");
 
+    private static ComboBox<String> cbbNationalities = new ComboBox<>();
+    private static ComboBox<String> cbbDivision = new ComboBox<>();
+    private static ComboBox<String> cbbClub = new ComboBox<>();
     private static ComboBox<String> cbbPlayerPositions = new ComboBox<>();
     private static TextField txfAgeMin = new TextField();
     private static TextField txfAgeMax = new TextField();
     private static TextField txfHeightMin = new TextField();
     private static TextField txfHeightMax = new TextField();
     private static TextField txfMinutesMin = new TextField();
+    private static TextField txfAvgRatingMin = new TextField();
 
-    public static GridPane addToGridPane(GridPane gridPane) {
-        addAllComponentsToList();
+    public static void addToGridPane(GridPane gridPane) {
+        components.addAll(GuiFilters.getStaticFields(BaseFilters.class));
+        GuiFilters.restrictInput(components);
+        restrictInput();
+        addTooltips();
         modifyComponents();
-        addToCbbPlayerPosition();
 
-        gridPane.add(lblPosition, 0, 0);
-        gridPane.add(lblAge, 0, 1);
-        gridPane.add(lblHeight, 0, 2);
-        gridPane.add(lblMinutes, 0, 3);
+        addOptionsToPositionCombobox();
+        new AutoCompleteComboboxListener<>(cbbNationalities);
 
-        gridPane.add(cbbPlayerPositions, 1, 0);
-        gridPane.add(txfAgeMin, 1, 1);
-        gridPane.add(txfAgeMax, 1, 1);
-        gridPane.add(txfHeightMin, 1, 2);
-        gridPane.add(txfHeightMax, 1, 2);
-        gridPane.add(txfMinutesMin, 1, 3);
+        int i = 0;
+        for (Object label : components) {
+            if (label instanceof Label) {
+                gridPane.add((Node) label, 0, i);
+                i++;
+            }
+        }
 
-        return gridPane;
+        i = 0;
+        gridPane.add(cbbNationalities, 1, i++);
+        gridPane.add(cbbDivision, 1, i++);
+        gridPane.add(cbbClub, 1, i++);
+        gridPane.add(cbbPlayerPositions, 1, i++);
+        gridPane.add(txfAgeMin, 1, i);
+        gridPane.add(txfAgeMax, 1, i++);
+        gridPane.add(txfHeightMin, 1, i);
+        gridPane.add(txfHeightMax, 1, i++);
+        gridPane.add(txfMinutesMin, 1, i++);
+        gridPane.add(txfAvgRatingMin, 1, i++);
     }
 
     private static void modifyComponents() {
         for (Object textField : components) {
             if (textField instanceof TextField) {
-                ((TextField) textField).setMaxWidth(40);
+                ((TextField) textField).setMaxWidth(50);
                 ((TextField) textField).setStyle("-fx-alignment: CENTER;");
             }
         }
+
+        for (Object combobox : components) {
+            if (combobox instanceof ComboBox<?>) {
+                ((ComboBox<?>) combobox).setMaxWidth(190);
+            }
+        }
+
+        txfMinutesMin.setMaxWidth(txfMinutesMin.getWidth() + 105);
         cbbPlayerPositions.setValue("Any");
+        cbbNationalities.setValue("Any");
+        cbbNationalities.setEditable(true);
 
         txfAgeMin.setPromptText("15");
         txfAgeMax.setPromptText("45");
         txfHeightMin.setPromptText("150");
         txfHeightMax.setPromptText("200");
-        txfMinutesMin.setPromptText("100");
+        txfMinutesMin.setPromptText("900");
 
         GridPane.setMargin(txfAgeMax, new Insets(0, 0, 0, 55));
         GridPane.setMargin(txfHeightMax, new Insets(0, 0, 0, 55));
 
     }
 
-    private static void addAllComponentsToList() {
-        components.add(lblPosition);
-        components.add(lblAge);
-        components.add(lblHeight);
-        components.add(lblMinutes);
-        components.add(cbbPlayerPositions);
-        components.add(txfAgeMin);
-        components.add(txfAgeMax);
-        components.add(txfHeightMin);
-        components.add(txfHeightMax);
-        components.add(txfMinutesMin);
-    }
+    public static List<Player> createFilters(List<Player> players) {
+        GuiFilters.commaToDot(components);
 
-    public static List<Player> applyFilters(List<Player> players) {
+        if (!cbbNationalities.getValue().equals("Any"))
+            players = filterByNationality(players);
+
+        if (!cbbDivision.getValue().equals("Any"))
+            players = filterByDivision(players);
+
+        if (!cbbClub.getValue().equals("Any"))
+            players = filterByClub(players);
 
         if (!cbbPlayerPositions.getValue().equals("Any"))
             players = filterByPosition(players);
 
-        if (!txfAgeMin.getText().isEmpty() || !txfAgeMax.getText().isEmpty())
-            players = filterByAge(players);
+        if (!txfAgeMin.getText().isEmpty())
+            players = GuiFilters.filterByAttribute(players, "age", ">=",
+                    Integer.parseInt(txfAgeMin.getText()));
 
-        if (!txfHeightMin.getText().isEmpty() || !txfHeightMax.getText().isEmpty())
-            players = filterByHeight(players);
+        if (!txfAgeMax.getText().isEmpty())
+            players = GuiFilters.filterByAttribute(players, "age", "<=",
+                    Integer.parseInt(txfAgeMax.getText()));
+
+        if (!txfHeightMin.getText().isEmpty())
+            players = GuiFilters.filterByAttribute(players, "height", ">=",
+                    Integer.parseInt(txfHeightMin.getText()));
+
+        if (!txfHeightMax.getText().isEmpty())
+            players = GuiFilters.filterByAttribute(players, "height", "<=",
+                    Integer.parseInt(txfHeightMax.getText()));
 
         if (!txfMinutesMin.getText().isEmpty())
-            players = filterByMinutesPlayed(players);
+            players = GuiFilters.filterByAttribute(players, "mins", ">=",
+                    Double.parseDouble(txfMinutesMin.getText()));
+
+        if (!txfAvgRatingMin.getText().isEmpty()) {
+            players = GuiFilters.filterByAttribute(players, "avgRating", ">=",
+                    Double.parseDouble(txfAvgRatingMin.getText()));
+        }
 
         return players;
     }
 
-    public static void resetFilters() {
-        cbbPlayerPositions.setValue("Any");
-        txfHeightMin.setText("");
-        txfHeightMax.setText("");
-        txfAgeMin.setText("");
-        txfAgeMax.setText("");
-        txfMinutesMin.setText("");
+    private static List<Player> filterByNationality(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
 
+        for (Player player : players) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                if (entry.getValue().equals(cbbNationalities.getValue())) {
+                    if (player.getNationality().equals(entry.getKey()))
+                        filteredData.add(player);
+                }
+            }
+        }
+        return filteredData;
+    }
+
+    private static List<Player> filterByDivision(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getDivision().equals(cbbDivision.getValue()))
+                filteredData.add(player);
+        }
+        return filteredData;
+    }
+
+    private static List<Player> filterByClub(List<Player> players) {
+        List<Player> filteredData = new ArrayList<>();
+
+        for (Player player : players) {
+            if (player.getClub().equals(cbbClub.getValue()))
+                filteredData.add(player);
+        }
+        return filteredData;
     }
 
     private static List<Player> filterByPosition(List<Player> players) {
@@ -121,47 +194,7 @@ public class BaseFilters {
         return filteredData;
     }
 
-    private static List<Player> filterByAge(List<Player> players) {
-        if (txfAgeMin.getText().isEmpty()) txfAgeMin.setText("0");
-        else if (txfAgeMax.getText().isEmpty()) txfAgeMax.setText("100");
-
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getAge() >= Integer.parseInt(txfAgeMin.getText()) &&
-                    player.getAge() <= Integer.parseInt(txfAgeMax.getText())) {
-                filteredData.add(player);
-            }
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByHeight(List<Player> players) {
-        if (txfHeightMin.getText().isEmpty()) txfHeightMin.setText("100");
-        else if (txfHeightMax.getText().isEmpty()) txfHeightMax.setText("250");
-
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getHeight() >= Integer.parseInt(txfHeightMin.getText()) &&
-                    player.getHeight() <= Integer.parseInt(txfHeightMax.getText())) {
-                filteredData.add(player);
-            }
-        }
-
-        return filteredData;
-    }
-
-    private static List<Player> filterByMinutesPlayed(List<Player> players) {
-        List<Player> filteredData = new ArrayList<>();
-        for (Player player : players) {
-            if ((player.getMins() >= Integer.parseInt(txfMinutesMin.getText())))
-                filteredData.add(player);
-        }
-
-        return filteredData;
-    }
-
-    private static void addToCbbPlayerPosition() {
+    private static void addOptionsToPositionCombobox() {
         cbbPlayerPositions.getItems().add("Any");
         for (Position p : Position.values()) {
             cbbPlayerPositions.getItems().add(p.toString());
@@ -176,8 +209,37 @@ public class BaseFilters {
         };
         for (Object textField : components) {
             if (textField instanceof TextField) {
+                if (!textField.equals(txfAvgRatingMin))
                 ((TextField) textField).setTextFormatter(new TextFormatter<>(filter));
             }
         }
+    }
+
+    private static void addTooltips() {
+        GuiFilters.addTooltips("Min. age of player", txfAgeMin);
+        GuiFilters.addTooltips("Max. age of player", txfAgeMax);
+        GuiFilters.addTooltips("Min. height of player in cm", txfHeightMin);
+        GuiFilters.addTooltips("Max. height of player in cm", txfHeightMax);
+        GuiFilters.addTooltips("Min. number of minutes played", txfMinutesMin);
+    }
+
+    public static List getComponents() {
+        return components;
+    }
+
+    public static ComboBox<String> getCbbClub() {
+        return cbbClub;
+    }
+
+    public static ComboBox<String> getCbbDivision() {
+        return cbbDivision;
+    }
+
+    public static ComboBox<String> getCbbPlayerPositions() {
+        return cbbPlayerPositions;
+    }
+
+    public static ComboBox<String> getCbbNationalities() {
+        return cbbNationalities;
     }
 }
